@@ -5,6 +5,7 @@
 use Exception;
 use Oxmosys\QueryBuilder;
 use PDO;
+use Oxmosys\AppConfig;
 
 class InitDB
 {
@@ -14,8 +15,8 @@ class InitDB
     public function __construct()
     {
         $app = new AppConfig();
-        self::$appConfig = $app::$appConfig;
-        self::$appDbConn = $app::$appDbConn;
+        self::$appConfig = $app::$config;
+        self::$appDbConn = $app::$dbConn;
         self::$queryBuilder = new QueryBuilder(self::$appDbConn);
     }
 
@@ -25,8 +26,10 @@ class InitDB
 
             $dbExists = self::$queryBuilder->run("SELECT upper(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . self::$appConfig["db"]["database"] . "'");
 
-            if ($dbExists[0][0] == strtoupper(self::$appConfig["db"]["database"])) {
-                self::$queryBuilder->run("DROP DATABASE " . self::$appConfig["db"]["database"]);
+            if (isset($dbExists[0][0])) {
+                if ($dbExists[0][0] == strtoupper(self::$appConfig["db"]["database"])) {
+                    self::$queryBuilder->run("DROP DATABASE " . self::$appConfig["db"]["database"]);
+                }
             }
 
             self::$appDbConn->query("CREATE DATABASE " . self::$appConfig["db"]["database"]);

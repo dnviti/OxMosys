@@ -33,8 +33,7 @@ class AppConfig
     {
         $dbCorrect = strtoupper(self::$config["db"]["database"]);
         $dbExists = self::$qb->run("SELECT upper(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbCorrect'");
-        $dbExists = strtoupper($dbExists[0][0]);
-        if ($dbExists == $dbCorrect && (bool)self::$config["db"]["isinit"]) {
+        if (isset($dbExists[0][0]) && (bool)self::$config["db"]["isinit"]) {
             self::$dbConn->exec("USE " . $dbCorrect);
             $dbExists = true;
         } else {

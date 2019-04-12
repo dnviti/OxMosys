@@ -15,7 +15,7 @@ abstract class Cookie
                 return $_COOKIE;
             } else {
                 if (!isset($_COOKIE[$name]))
-                    throw new Exception("No Cookie Found", 1);
+                    return false; //throw new Exception("No Cookie Found", 1);
 
                 return unserialize($_COOKIE[$name]);
             }

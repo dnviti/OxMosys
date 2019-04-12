@@ -455,17 +455,29 @@ class Page
         $_components = $this->_components;
         $_templates = $this->_templates;
 
-        $gridRow_btn = [
-            $_components->button("Nuovo Articolo", "primary", "2"),
-            $_components->button("Lista Articoli", "secondary", "8")
-        ];
+        // $gridRow_btn = [
+        //     $_components->button("Nuovo Articolo", "primary", "2"),
+        //     $_components->button("Lista Articoli", "secondary", "8")
+        // ];
 
         $page =
             $_templates->header()
             . $_templates->slideMenu()
             . $_templates->body()
-            . $_components->hGridRow($gridRow_btn, 'btnNav')
-            . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', 'Articoli Movimentabili')
+            // . $_components->hGridRow($gridRow_btn, 'btnNav')
+            . $_components->vGridRow([
+                '<h5 style="text-align:center">Articoli Movimentabili</h5>',
+                $_components->hGridRow([
+                    $_components->hGridRow([
+                        $_components->selectFromQuery('lov/lov_causali', 'app_users', 'app_user_roles_id', 'classic', 'Causali', "", "NO", null, null, null, 'style="min-width: 150px;"'),
+                        $_components->itemFromColumn('app_users', 'quantita', 'number', "Quantità", null, null, 'style="max-width: 40%; min-width: 110px;"')
+                    ]),
+                    '<div></div>'
+                ])
+            ])
+            // . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', 'Articoli Movimentabili')
+
+            . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', ' ')
             . $_templates->footer();
 
         return $page;

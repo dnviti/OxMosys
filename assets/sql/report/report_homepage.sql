@@ -1,17 +1,16 @@
 SELECT
-'',
+concat(
+    '<span><button onclick="',
+    concat('window.open(', '''?p=2&ID=', a.id, ''')'),
+    '" class="btn btn-link btn-table" data-toggle="tooltip" data-placement="right" title="Modifica">',
+    '<i class="fas fa-image"></i>',
+    '</button></span>'
+) as "<i class='fas fa-image'></i>",
 CONCAT(
-'<div class="btn-group mr-2" role="group" aria-label="First group">',
-'<button type="button" class="btn btn-primary">U</button>',
-'<button type="button" class="btn btn-primary">XS</button>',
-'<button type="button" class="btn btn-primary">S</button>',
-'<button type="button" class="btn btn-primary">M</button>',
-'<button type="button" class="btn btn-primary">L</button>',
-'<button type="button" class="btn btn-primary">XL</button>',
-'<button type="button" class="btn btn-primary">XXL</button>',
-'<button type="button" class="btn btn-primary">XXXL</button>',
-'</div>'
-) as "Azioni",
+'<button type="button" class="btn btn-danger" style="width:53px">',
+b.taglia,
+'</button>'
+) as "Taglia",
 c.buname AS "Fornitore",
 b.genere AS "Genere",
 case when a.obsolete = 0 then 'Sì' else 'No' end AS "Con.",
@@ -19,7 +18,7 @@ b.tipo AS "Tipo",
 b.modello AS "Modello",
 b.colore AS "Colore",
 a.CODE AS "Codice",
-b.taglia AS "Taglia",
+/*b.taglia AS "Taglia",*/
 CONCAT('€ ', format(a.unitprice, 2)) AS "Prz Uni",
 COALESCE(z.quantity, 0) AS "Tot Giac",
 CONCAT('€ ', format(COALESCE(z.quantity, 0) * a.unitprice, 2)) AS "Val Giac"
