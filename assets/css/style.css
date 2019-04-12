@@ -477,3 +477,7 @@ button.btn.dropdown-toggle.btn-light {
 .bootstrap-select .dropdown-toggle .filter-option-inner {
   padding-top: 3px;
 }
+
+table .btn {
+  padding: 4px;
+}

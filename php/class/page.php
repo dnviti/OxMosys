@@ -1135,7 +1135,7 @@ class Template extends Asset
     {
         $_components = $this->pageComponents;
         $slidenav = '        <nav id="menu">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <!--<div class="col">-->
                     <h4 style="margin-top: 10px;margin-left: 15px;">Menù</h4>
@@ -1223,7 +1223,7 @@ class Template extends Asset
                     </span>
                 </button>';
         }
-        $body = $body . '<div class="container">
+        $body = $body . '<div class="container-fluid">
         <div class="row">
             <div class="col">'; /*
         if ($this->user) {

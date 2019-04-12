@@ -1,4 +1,17 @@
 SELECT
+'',
+CONCAT(
+'<div class="btn-group mr-2" role="group" aria-label="First group">',
+'<button type="button" class="btn btn-primary">U</button>',
+'<button type="button" class="btn btn-primary">XS</button>',
+'<button type="button" class="btn btn-primary">S</button>',
+'<button type="button" class="btn btn-primary">M</button>',
+'<button type="button" class="btn btn-primary">L</button>',
+'<button type="button" class="btn btn-primary">XL</button>',
+'<button type="button" class="btn btn-primary">XXL</button>',
+'<button type="button" class="btn btn-primary">XXXL</button>',
+'</div>'
+) as "Azioni",
 c.buname AS "Fornitore",
 b.genere AS "Genere",
 case when a.obsolete = 0 then 'Sì' else 'No' end AS "Con.",
