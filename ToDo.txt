@@ -1,0 +1,3 @@
+- Bug Fix Rendi Obsoleto
+- Attivare Movimenti (Bottoni)
+- Caricamento Foto Articolo (Compressione immagine)

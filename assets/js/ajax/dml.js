@@ -49,8 +49,7 @@ $("button.ajax-action").click(function (event) {
                         $(this).attr("ajax-action-type"),
                         $(this).attr("ajax-form"),
                         null,
-                        $(this).attr("ajax-topage"),
-                        false
+                        $(this).attr("ajax-topage")
                     );
                 }
             });
@@ -61,8 +60,7 @@ $("button.ajax-action").click(function (event) {
                 $(this).attr("ajax-action-type"),
                 $(this).attr("ajax-form"),
                 null,
-                $(this).attr("ajax-topage"),
-                false
+                $(this).attr("ajax-topage")
             );
         }
 

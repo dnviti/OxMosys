@@ -259,7 +259,7 @@ class Page
                 $_components->button(
                     'Crea Articolo',
                     'primary',
-                    8,
+                    false,
                     'ajax-action',
                     'btn-insert',
                     "php/actions/send_data_dml.php",
@@ -272,7 +272,7 @@ class Page
                 $_components->button(
                     'Salva',
                     'success',
-                    8,
+                    false,
                     'ajax-action',
                     'btn-update',
                     "php/actions/send_data_dml.php",

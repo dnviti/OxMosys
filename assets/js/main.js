@@ -309,11 +309,11 @@ function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmai
             if (okmess != null && okmess != undefined && okmess) {
                 bootbox.alert(okmess, function () {
                     cback(response);
-                    if (toPage != null) location.href = "?p=" + toPage;
+                    if (toPage != false && toPage != "") location.href = "?p=" + toPage;
                 });
             } else {
                 cback(response);
-                if (toPage != null) location.href = "?p=" + toPage;
+                if (toPage != false && toPage != "") location.href = "?p=" + toPage;
             }
         } else {
             bootbox.dialog({
