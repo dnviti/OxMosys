@@ -479,9 +479,56 @@ button.btn.dropdown-toggle.btn-light {
 }
 
 table .btn {
-  padding: 8px;
+  font-size: 10pt;
+  padding: 8px 0;
+  max-height: 43px;
+  max-width: 53px;
 }
 
 .col-md-6 {
   flex: 0 0 25% !important;
+}
+
+.perc-10 {
+  max-width: 10%;
+}
+
+.perc-20 {
+  max-width: 20%;
+}
+
+.perc-30 {
+  max-width: 30%;
+}
+
+.perc-40 {
+  max-width: 40%;
+}
+
+.perc-50 {
+  max-width: 50%;
+}
+
+.perc-60 {
+  max-width: 60%;
+}
+
+.perc-70 {
+  max-width: 70%;
+}
+
+.perc-80 {
+  max-width: 80%;
+}
+
+.perc-90 {
+  max-width: 90%;
+}
+
+.bootstrap-select {
+  top: -45px !important;
+}
+
+.bootstrap-select>select {
+  position: relative !important;
 }

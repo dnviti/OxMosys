@@ -304,13 +304,11 @@ class Page
 
         $form_items = [
             $_components->vGridRow([
-                // $_components->hGridRow([
-                //     $_components->itemFromColumn('app_warehouse_items', 'code', 'hidden'),
-                // ]),
                 $_components->hGridRow([
-                    $_components->selectFromQuery('lov/lov_suppliers', 'app_warehouse_items', 'app_suppliers_id', 'search', 'Fornitore', "", "NO"),
-                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["GENERE"] : null)),
+                    $_components->selectFromQuery('lov/lov_suppliers', 'app_warehouse_items', 'app_suppliers_id', 'classic', 'Fornitore', "", "NO"),
+                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["GENERE"] : null))
                 ]),
+                $_components->hGridRow(['<br>']),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_custom_warehouse_items', 'tipo', 'autocomplete', "Tipo", false, (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TIPO"] : null)),
                     $_components->itemFromColumn('app_custom_warehouse_items', 'modello', 'autocomplete', "Modello", false, (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["MODELLO"] : null)),
@@ -319,7 +317,7 @@ class Page
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_warehouse_items', 'code', 'text', 'Codice'),
                     $_components->selectFromQuery('lov/lov_taglie', 'app_custom_warehouse_items', 'taglia', 'classic', 'Taglia', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TAGLIA"] : null)),
-                    $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario")
+                    $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario", false, null, null, '', '', 0.01)
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione"),
@@ -455,27 +453,19 @@ class Page
         $_components = $this->_components;
         $_templates = $this->_templates;
 
-        // $gridRow_btn = [
-        //     $_components->button("Nuovo Articolo", "primary", "2"),
-        //     $_components->button("Lista Articoli", "secondary", "8")
-        // ];
-
         $page =
             $_templates->header()
             . $_templates->slideMenu()
             . $_templates->body()
-            // . $_components->hGridRow($gridRow_btn, 'btnNav')
             . $_components->vGridRow([
                 '<h5 style="text-align:center">Articoli Movimentabili</h5>',
                 $_components->hGridRow([
                     $_components->hGridRow([
-                        $_components->selectFromQuery('lov/lov_causali', 'app_users', 'app_user_roles_id', 'classic', 'Causali', "", "NO", null, null, null, 'style="min-width: 150px;"'),
-                        $_components->itemFromColumn('app_users', 'quantita', 'number', "Quantità", null, null, 'style="max-width: 40%; min-width: 110px;"')
-                    ]),
-                    '<div></div>'
+                        $_components->selectFromQuery('lov/lov_causali', 'app_warehouse_causals', 'id', 'classic', 'Causali', "", "NO", 2, "", null),
+                        $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1, 'style="max-width: 40%; min-width: 110px;"')
+                    ], "", "max-width:350px;min-width:350px")
                 ])
             ])
-            // . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', 'Articoli Movimentabili')
 
             . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', ' ')
             . $_templates->footer();
@@ -574,16 +564,27 @@ class Component
                 //$tableRows = $result->fetch_array();
                 $tableBody = '<tbody class="table-striped">';
 
+
+
                 // while ($tableRows = $statement->fetch(PDO::FETCH_ASSOC)) {
                 foreach ($tableData as $key => $value) {
                     # code...
-                    $tableBody = $tableBody . '<tr>';
+                    $headerIdx = 0;
+
+                    $tableBody .= '<tr>';
                     foreach ($tableData[$key] as &$value) {
-                        $tableBody = $tableBody . '<td>' . $value . '</td>';
+                        if (is_array($tableCols[$headerIdx])) {
+                            $last_value = end($tableCols[$headerIdx]);
+                            $last_key = key($tableCols[$headerIdx]);
+                            $tableBody .= '<td headers="' . $last_key . '">' . $value . '</td>';
+                        } else {
+                            $tableBody .= '<td headers="' . $tableCols[$headerIdx] . '">' . $value . '</td>';
+                        }
+                        $headerIdx++;
                     }
-                    $tableBody = $tableBody . '</tr>';
+                    $tableBody .= '</tr>';
                 }
-                $tableBody = $tableBody . "</tbody>";
+                $tableBody .= "</tbody>";
 
                 $table = '';
 
@@ -647,18 +648,22 @@ class Component
             $lovReturn = [];
             $lovDisplay = [];
 
-            if ($label != null) {
-                $select = '<label  for="' . $queryName . '">' . $label . '</label>';
-            }
+
 
 
             switch ($type) {
                 case 'classic':
-                    $select = $select . '<select ' . ($this->isObsolete ? ' disabled' : '') . ' class="custom-select" aria-nullable="' . $nullable . '" name="' . strtoupper($tableName . '-' . $colName) . '" id="' . strtoupper('LOV.' . $tableName . '-' . $colName) . '" ' . $attrib . '>';
+                    if ($label != null) {
+                        $select = '<label for="' . strtoupper('LOV-' . $tableName . '-' . $colName) . '">' . $label . '</label>';
+                    }
+                    $select .= '<select ' . ($this->isObsolete ? ' disabled' : '') . ' class="custom-select" aria-nullable="' . $nullable . '" name="' . strtoupper($tableName . '-' . $colName) . '" id="' . strtoupper('LOV-' . $tableName . '-' . $colName) . '" ' . $attrib . '>';
 
                     break;
                 case 'search':
-                    $select = $select . '<br><select ' . ($this->isObsolete ? ' disabled' : '') . ' class="selectpicker" aria-nullable="' . $nullable . '" name="' . strtoupper($tableName . '-' . $colName) . '" data-live-search="true" id="' . strtoupper('LOV.' . $tableName . '-' . $colName) . '" ' . $attrib . '>';
+                    if ($label != null) {
+                        $select = '<label style="margin-bottom: 14px;" for="' . strtoupper('LOV-' . $tableName . '-' . $colName) . '">' . $label . '</label>';
+                    }
+                    $select .= '<br><select ' . ($this->isObsolete ? ' disabled' : '') . ' class="selectpicker" aria-nullable="' . $nullable . '" name="' . strtoupper($tableName . '-' . $colName) . '" data-live-search="true" id="' . strtoupper('LOV-' . $tableName . '-' . $colName) . '" ' . $attrib . '>';
                     break;
             }
 
@@ -705,7 +710,7 @@ class Component
         }
     }
 
-    public function itemFromColumn($tableName, $colName, $itemType, $itemName = null, $itemLabel = false, $itemDefault = null, $attrib = null, $class = '', $title = '')
+    public function itemFromColumn($tableName, $colName, $itemType, $itemName = null, $itemLabel = false, $itemDefault = null, $attrib = null, $class = '', $title = '', $step = 1)
     {
         isset($_GET['ID']) ? $rowid = $_GET['ID'] : $rowid = null;
 
@@ -758,7 +763,7 @@ class Component
                 $item = '';
 
                 if ($itemLabel && $itemName != null) {
-                    $item = '<label  for="' . $tableName . '_' . $itemData['Field'] . '">' . str_replace('_', ' ', $itemName) . '</label>';
+                    $item = '<label  for="' . strtoupper($tableName . '-' . $itemData['Field']) . '">' . str_replace('_', ' ', $itemName) . '</label>';
                 }
 
                 if ($itemType != "password") {
@@ -797,7 +802,7 @@ class Component
                             . ($this->isObsolete ? '" disabled' : '"')
                             . ' value="' . $itemDefault
                             . '" type="' . $itemType
-                            . '' . ($itemType == 'number' ? '" step=".01"' : '')
+                            . '' . ($itemType == 'number' ? '" step="' . $step . '"' : '')
                             . '" class="form-control" table="' . strtoupper($tableName) . '" name="' . strtoupper($tableName . '-' . $itemData['Field'])
                             . '" id="' . strtoupper($itemType . '-' . $tableName . '-' . $itemData['Field'])
                             . '" placeholder="' . ($itemName != null ? str_replace('_', ' ', $itemName) : str_replace('_', ' ', $itemData['Field']))
@@ -870,12 +875,12 @@ class Component
         }
     }
 
-    public function hGridRow($contentarr = [], $class = '')
+    public function hGridRow($contentarr = [], $classRow = '', $styleCols = '')
     {
-        $hGridRow = '<div class="row ' . $class . '">';
+        $hGridRow = '<div class="row ' . $classRow . '">';
         foreach ($contentarr as &$content) {
             $hGridRow = $hGridRow . '
-            <div class="col">
+            <div class="col" style="' . $styleCols . '">
               ' . $content . '
             </div>';
         }
@@ -1083,12 +1088,14 @@ class Template extends Asset
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" sizes="16x16" />
                 <!-- CSS -->
 
                     ';
         $header .= $this->getCss([
             //$_paths["third-part"] . "bootstrap/bootstrap.min.css",
             $_paths["third-part"] . "jquery/jquery-ui.css",
+            $_paths["third-part"] . "bootstrap/css/bootstrap.min.css",
             $_paths["css"] . "bsThemeMaterial.css",
             $_paths["third-part"] . "bootstrap-select/bootstrap-select.min.css",
             $_paths["third-part"] . "slideout/slideout.css",
@@ -1096,7 +1103,7 @@ class Template extends Asset
             $_paths["third-part"] . "holdon/HoldOn.min.css",
             $_paths["third-part"] . "DataTables/dataTables.min.css",
             $_paths["third-part"] . "DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css",
-            $_paths["third-part"] . "tooltipster/css/tooltipster.bundle.min.css",
+            $_paths["third-part"] . "animate/animate.css",
             $_paths["css"] . "style.css"
         ]);
 
@@ -1115,7 +1122,7 @@ class Template extends Asset
             $_paths["third-part"] . "DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js",
             $_paths["third-part"] . "bootbox/bootbox.all.min.js",
             $_paths["third-part"] . "fontawesome5/js/all.js",
-            $_paths["third-part"] . "tooltipster/js/tooltipster.bundle.min.js",
+            $_paths["third-part"] . "bootstrap-notify/bootstrap-notify.min.js",
             $_paths["js"] . "main.js"
         ]) . '
             </head>
@@ -1227,15 +1234,16 @@ class Template extends Asset
 
     public function body()
     {
+        $_components = $this->pageComponents;
         $body = '<main id="panel">';
         if ($this->user) {
-            $body = $body . '<button class="toggle-menu hamburger hamburger--slider" type="button"  tabindex="0" aria-label="Menu" role="button" aria-controls="navigation">
+            $body .= '<button class="toggle-menu hamburger hamburger--slider" type="button"  tabindex="0" aria-label="Menu" role="button" aria-controls="navigation">
                     <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                     </span>
                 </button>';
         }
-        $body = $body . '<div class="container-fluid">
+        $body .= '<div class="container-fluid">
         <div class="row">
             <div class="col">'; /*
         if ($this->user) {
@@ -1247,7 +1255,7 @@ class Template extends Asset
         } else {
             $body = $body . '<br>';
         }*/
-        $body = $body . '</div>
+        $body .= '</div>
         </div>
         ';
 

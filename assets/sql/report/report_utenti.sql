@@ -3,7 +3,7 @@ concat(
     '<span><button onclick="',
     concat('location.href=', '''?p=7&ID=', a.id, ''''),
     '" class="btn btn-link btn-table" data-toggle="tooltip" data-placement="right" title="Modifica">',
-    '<i class="fas fa-pencil-ruler"></i>',
+    '<i class="fas fa-pencil-ruler fa-2x"></i>',
     '</button></span>'
 ) as "",
 	concat(a.name, ' ', a.surname) as Utente, 

@@ -49,7 +49,23 @@ $("button.ajax-action").click(function (event) {
                         $(this).attr("ajax-action-type"),
                         $(this).attr("ajax-form"),
                         null,
-                        $(this).attr("ajax-topage")
+                        $(this).attr("ajax-topage"),
+                        modalResultMessageOK = false,
+                        modalResultMessageERROR = "Errore: Operazione Fallita",
+                        loadingMessage = "Caricamento in corso...",
+                        loadingColor = "#ccb300",
+                        loadingText = "black",
+                        function () {
+                            if (window.opener != null) {
+                                var callback = function () {
+                                    window.opener.location.reload(false);
+                                    window.close();
+                                }
+                                bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
+                            } else {
+                                bootbox.alert("Operazione Completata");
+                            }
+                        }
                     );
                 }
             });
@@ -60,7 +76,23 @@ $("button.ajax-action").click(function (event) {
                 $(this).attr("ajax-action-type"),
                 $(this).attr("ajax-form"),
                 null,
-                $(this).attr("ajax-topage")
+                $(this).attr("ajax-topage"),
+                modalResultMessageOK = false,
+                modalResultMessageERROR = "Errore: Operazione Fallita",
+                loadingMessage = "Caricamento in corso...",
+                loadingColor = "#ccb300",
+                loadingText = "black",
+                function () {
+                    if (window.opener != null) {
+                        var callback = function () {
+                            window.opener.location.reload(false);
+                            window.close();
+                        }
+                        bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
+                    } else {
+                        bootbox.alert("Operazione Completata");
+                    }
+                }
             );
         }
 

@@ -93,8 +93,6 @@ class DML
                 break;
         }
 
-
-
         try {
             $res = $this->queryBuilder
                 ->table($this->tbname)

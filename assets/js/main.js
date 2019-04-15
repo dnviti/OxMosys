@@ -220,7 +220,7 @@ function sendAjaxData(
     form_id = null,
     obj_data = null,
     to_page = null,
-    modalResultMessageOK = undefined,
+    modalResultMessageOK = false,
     modalResultMessageERROR = "Errore: Operazione Fallita",
     loadingMessage = "Caricamento in corso...",
     loadingColor = "#ccb300",
@@ -259,8 +259,10 @@ function sendAjaxData(
         textColor: loadingText
     };
 
-    HoldOn.open(options);
-    // console.log(serializedData);
+    if (loadingMessage) {
+        HoldOn.open(options);
+        // console.log(serializedData);
+    }
 
     request = $.ajax({
         url: form_action_url,
@@ -271,6 +273,7 @@ function sendAjaxData(
     // Callback handler that will be called on success
     request.done(function (response, textStatus, jqXHR) {
         HoldOn.close();
+
         showModalAjaxResultDebug(
             response,
             modalResultMessageOK,
@@ -305,7 +308,7 @@ function sendAjaxData(
 // notifiche
 function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmail, toPage = null, cback = function () {}, timeout = 500) {
     setTimeout(() => {
-        if (!response) {
+        if (response.substring(0, 3) != "ERR") {
             if (okmess != null && okmess != undefined && okmess) {
                 bootbox.alert(okmess, function () {
                     cback(response);

@@ -236,6 +236,7 @@ class InitDB
                                 (
                                     `id` INT NOT NULL AUTO_INCREMENT, 
                                     `code` VARCHAR(255) NOT NULL, 
+                                    `type` CHAR(1) NOT NULL,
                                     `descri` VARCHAR(255) NOT NULL,
                                     `datereg` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                                     `lastupdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

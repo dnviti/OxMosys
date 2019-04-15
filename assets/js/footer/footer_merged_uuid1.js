@@ -1,7 +1,40 @@
 
 /**
  * Source Folder: "assets/js/footer/" 
- * Source File Name: "0-autocomplete.js"
+ * Source File Name: "0-slideout.js"
+ */
+
+/* Slideout Object */
+var slideout = new Slideout({
+    "panel": document.getElementById("panel"),
+    "menu": document.getElementById("menu"),
+    "padding": 256,
+    "tolerance": 70
+});
+
+slideout.on("translatestart", function () {
+    $(".toggle-menu").addClass("is-active");
+});
+
+slideout.on("beforeclose", function () {
+    $(".toggle-menu").removeClass("is-active");
+});
+
+document.querySelector(".toggle-menu").addEventListener("mouseenter", function () {
+    slideout.toggle();
+    if (slideout.isOpen()) {
+        $(".toggle-menu").addClass("is-active");
+    } else {
+        $(".toggle-menu").removeClass("is-active");
+    }
+});
+
+/*slideout.open();*/
+
+/* ------ */
+/**
+ * Source Folder: "assets/js/footer/" 
+ * Source File Name: "10-autocomplete.js"
  */
 
 // $(document).ready(function () {
@@ -150,61 +183,3 @@ function autocomplete(inp) {
         closeAllLists(e.target);
     });
 }
-/**
- * Source Folder: "assets/js/footer/" 
- * Source File Name: "1-slidemenu.js"
- */
-
-$("#slnav-logout").click(function (event) {
-
-    event.preventDefault();
-
-    var options = {};
-
-    // Starto la request di AJAX
-    // Variable to hold request
-    var request;
-
-    if (request) {
-        request.abort();
-    }
-
-    options = {
-        theme: "sk-cube-grid",
-        message: "Uscita in corso...",
-        backgroundColor: "#ccb300",
-        textColor: "black"
-    };
-
-    HoldOn.open(options);
-    //alert(serializedData);
-
-    request = $.ajax({
-        url: "php/actions/logout.php",
-        type: "post",
-        data: ""
-    });
-
-    // Callback handler that will be called on success
-    request.done(function (response, textStatus, jqXHR) {
-        //console.log(response);
-        //alert(response);
-        location.reload();
-    });
-
-    request.fail(function (jqXHR, textStatus, errorThrown) {
-        HoldOn.close(options);
-        alert(textStatus);
-        //alert("Errore sconosciuto, riprovare");
-        // Per debug
-        /*console.error(
-            "The following error occurred: " +
-            textStatus, errorThrown
-        );*/
-    });
-
-    request.always(function () {
-
-    });
-
-});

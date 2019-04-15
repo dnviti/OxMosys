@@ -8,7 +8,7 @@ $("#btn-login").click(function (event) {
         form_id = "f-login",
         obj_data = null,
         to_page = 1,
-        modalResultMessageOK = null,
+        modalResultMessageOK = false,
         modalResultMessageERROR = "Errore: Login Fallito",
         loadingMessage = "Login in corso...",
         loadingColor = "#ccb300",

@@ -41,6 +41,8 @@ try {
                 $DML->insert($params, DML::UPPER_CASE);
             }
 
+            echo $lastId;
+
             break;
         case "U":
 
@@ -84,6 +86,7 @@ try {
             break;
     }
 } catch (\Throwable $th) {
+    echo "ERR";
     $header = "HTTP/1.0 404 Errore: " . $th->getCode();
     $header .= " - " . $th->getMessage();
     die(header($header));
