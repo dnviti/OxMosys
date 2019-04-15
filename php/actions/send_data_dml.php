@@ -79,7 +79,36 @@ try {
         case "D":
             $DML = new DML($_POST);
 
-            $DML->delete("ID", $_POST["ID"]);
+            $params = array();
+
+            foreach ($DML->parentTable as $key => $value) {
+                $params[$value["COLUMN"]] = $value["VALUE"];
+            }
+            $DML->tbname = $value["TABLE"];
+
+            $last_value = end($params);
+            $last_key = key($params);
+
+            $lastId = $DML->delete("ID", $last_value);
+
+            // cancello i vecchi parametri per far posto ai nuovi
+            unset($params);
+
+            $params = array();
+
+            // Mi segno la tabella padre
+            $DML->parentTable = $DML->tbname;
+
+            // Tramite l'id della transazione in corso inserisco gli altri record
+            foreach ($DML->childrenTables as $key => $value) {
+                foreach ($DML->childrenTables[$key] as $key2 => $value2) {
+                    $params[$value2["COLUMN"]] = $value2["VALUE"];
+                }
+                $DML->tbname = $value2["TABLE"];
+                $params[$DML->parentTable . "_ID"] = $lastId;
+                $DML->delete($DML->parentTable . "_ID", $params);
+            }
+
             break;
         default:
             throw new Exception("Operation not valid (I->Insert, U->Update, D->Delete)", 1);

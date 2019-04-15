@@ -1170,7 +1170,7 @@ class Template extends Asset
             $slidenav .=
                 '<!--<span class="slideout-spacer"></span>-->
                     <div class="col">
-                        <a href="#" id="slnav-logout" class="list-group-item list-group-item-action">Logout</a>
+                        <a href="javascript:void(0)" id="slnav-logout" class="list-group-item list-group-item-action">Logout</a>
                     </div>
                 </div>';
         }

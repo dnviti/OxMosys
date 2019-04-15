@@ -308,7 +308,7 @@ function sendAjaxData(
 // notifiche
 function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmail, toPage = null, cback = function () {}, timeout = 500) {
     setTimeout(() => {
-        if (response.substring(0, 3) != "ERR") {
+        if (response.substring(0, 3) != "ERR" && response.substring(0, 15) != "<!DOCTYPE html>") {
             if (okmess != null && okmess != undefined && okmess) {
                 bootbox.alert(okmess, function () {
                     cback(response);

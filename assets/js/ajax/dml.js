@@ -1,5 +1,6 @@
 $("button.ajax-action").click(function (event) {
 
+    var thisButton = $(this);
     var err = 0;
 
     if ($(this).attr("ajax-action-type") == 'I' || $(this).attr("ajax-action-type") == 'U') {
@@ -44,12 +45,15 @@ $("button.ajax-action").click(function (event) {
         if ($(this).attr("ajax-action-type") == 'D') {
             bootbox.confirm("Rendere Obsoleto?", function (result) {
                 if (result) {
+                    var objReq = {};
+                    objReq[$("input[id*='-ID']").attr("NAME")] = $("input[id*='-ID']").val();
+                    objReq[$("input[id*='-ID']").attr("NAME") + "2"] = $("input[id*='-ID']").val();
                     sendAjaxData(
-                        $(this).attr("ajax-action"),
-                        $(this).attr("ajax-action-type"),
-                        $(this).attr("ajax-form"),
-                        null,
-                        $(this).attr("ajax-topage"),
+                        thisButton.attr("ajax-action"),
+                        thisButton.attr("ajax-action-type"),
+                        false,
+                        objReq,
+                        thisButton.attr("ajax-topage"),
                         modalResultMessageOK = false,
                         modalResultMessageERROR = "Errore: Operazione Fallita",
                         loadingMessage = "Caricamento in corso...",

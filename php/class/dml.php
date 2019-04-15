@@ -151,7 +151,7 @@ class DML
 
                 $res = $this->queryBuilder
                     ->table($this->tbname)
-                    ->where('ID', '=', $id)
+                    ->where($key, '=', $id)
                     ->update(array("OBSOLETE" => 1))
                     ->run();
 
@@ -164,7 +164,7 @@ class DML
 
                 $res = $this->queryBuilder
                     ->table($this->tbname)
-                    ->where('ID', '=', $id)
+                    ->where($key, '=', $id)
                     ->delete()
                     ->run();
 
