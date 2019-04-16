@@ -327,6 +327,7 @@ class InitDB
                                 `colore` VARCHAR(255) NOT NULL,
                                 `taglia` VARCHAR(255) NOT NULL,
                                 `genere` VARCHAR(255) NOT NULL,
+                                `imagepath` VARCHAR(255) NULL DEFAULT NULL,
                                 CONSTRAINT fk_app_custom_warehouse_items_userreg FOREIGN KEY (app_warehouse_items_id)
                                 REFERENCES app_warehouse_items(id)
                                 ON DELETE CASCADE

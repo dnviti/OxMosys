@@ -292,7 +292,7 @@ class Page
                         "f-warehouse-item"
                     ) : null)
             ];            // prendo i valori dalla query delle tabelle custom
-            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT TIPO, MODELLO, COLORE, TAGLIA, GENERE FROM APP_CUSTOM_WAREHOUSE_ITEMS WHERE APP_WAREHOUSE_ITEMS_ID = " . $_GET['ID']);
+            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT TIPO, MODELLO, COLORE, TAGLIA, GENERE, IMAGEPATH FROM APP_CUSTOM_WAREHOUSE_ITEMS WHERE APP_WAREHOUSE_ITEMS_ID = " . $_GET['ID']);
         }
 
         // $footer_objs = [
@@ -322,14 +322,18 @@ class Page
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione"),
                     $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note")
-                ]), ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
-            ], 'f_register_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
+                ]),
+                $_components->hGridRow([
+                    '<input id="uploadImage" type="file" accept="assets/img/upd/*" name="image" /><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
+                ]),
+                $_components->hGridRow(['<br>']),
+                ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
+            ], 'f_warehouse_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
 
             //Hidden Elements
             $_components->itemFromColumn('app_warehouse_items', 'app_measure_units_id', 'hidden', null, null, 1),
             $_components->itemFromColumn('app_warehouse_items', 'id', 'hidden', $rowId),
             $_components->itemFromColumn('app_warehouse_items', 'app_warehouses_id', 'hidden', null, null, 1),
-            // $_components->selectFromQuery('lov/lov_warehouses', 'app_warehouse_items', 'app_warehouse_id', 'search', 'Magazzino', "", "NO", 1),
             $_components->itemFromColumn('app_warehouse_items', 'userreg', 'hidden', null, null, $this->user["USER_ID"]),
             $_components->itemFromColumn('app_warehouse_items', 'userupdate', 'hidden', null, null, $this->user["USER_ID"])
         ];
@@ -1034,7 +1038,7 @@ class Component
     }
     public function form($contentarr = [], $id, $class = '')
     {
-        $form = '<form id="' . $id . '">';
+        $form = '<form id="' . $id . '" enctype="multipart/form-data">';
         foreach ($contentarr as &$content) {
             $form = $form . $content;
         }

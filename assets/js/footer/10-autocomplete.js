@@ -23,7 +23,7 @@ function autocomplete(inp) {
     var width = $(inp).width() + 26;
 
     var sql = `
-                    SELECT ${column}
+                    SELECT DISTINCT ${column}
                     FROM ${table}
                     WHERE ${column} LIKE '${value}%'
                     ORDER BY ${column} ASC
