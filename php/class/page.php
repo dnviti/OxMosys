@@ -323,9 +323,10 @@ class Page
                     $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione"),
                     $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note")
                 ]),
-                $_components->hGridRow([
-                    '<input id="uploadImage" type="file" accept="assets/img/upd/*" name="image" /><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
-                ]),
+                $rowId ?
+                    $_components->hGridRow([
+                        '<input id="uploadImage" type="file" accept="assets/img/upd/*" name="image" /><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
+                    ]) : '',
                 $_components->hGridRow(['<br>']),
                 ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
             ], 'f_warehouse_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
