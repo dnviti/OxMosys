@@ -84,3 +84,17 @@ $(".btn-movimento").click(function (e) {
     });
 
 });
+
+
+
+$('.btn-taglia').popover({
+    html: true,
+    trigger: 'hover',
+    placement: 'right',
+    title: function() {
+        return '-';
+    },
+    content: function () {
+        return '<img src="' + $(this).data('imagepath') + '" />';
+    }
+})

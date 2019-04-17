@@ -21,7 +21,16 @@ $("#f-warehouse-item").on('submit', (function (e) {
             if (data == 'invalid') {} else {
                 // view uploaded file.
                 $("#preview img").attr("src", data);
-                location.reload();
+
+                if (window.opener != null) {
+                    var callback = function () {
+                        window.opener.location.reload(false);
+                        location.reload();
+                    }
+                    bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
+                } else {
+                    bootbox.alert("Operazione Completata");
+                }
             }
         },
         error: function (e) {

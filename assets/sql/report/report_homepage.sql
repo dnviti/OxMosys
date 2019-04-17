@@ -16,8 +16,11 @@ FROM (
 	CONCAT(
 	    '<span><button onclick="',
 	    concat('window.open(', '''?p=2&ID=', a.id, ''',''Modifica Articolo'')'),
-	    '" class="btn btn-link btn-table" data-toggle="tooltip" data-placement="right" ',
-	    'title="Modifica">',
+	    '" class="btn btn-link btn-table btn-taglia" data-toggle="popover" data-placement="right" ',
+		'data-imagepath="',
+		b.imagepath,
+		'" ',
+	    'title="Modifica Articolo">',
 	    '<i class="fas fa-image fa-2x"></i>',
 	    '</button></span>'
 	) as image,
