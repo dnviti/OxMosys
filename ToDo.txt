@@ -1,3 +1,1 @@
-- Bug Fix Rendi Obsoleto -- OK
-- Attivare Movimenti (Bottoni) -- OK
-- Caricamento Foto Articolo (Compressione immagine)
+-- bug fix errore tabella doppia

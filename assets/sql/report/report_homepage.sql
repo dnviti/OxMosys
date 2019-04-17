@@ -18,7 +18,7 @@ FROM (
 	    concat('window.open(', '''?p=2&ID=', a.id, ''',''Modifica Articolo'')'),
 	    '" class="btn btn-link btn-table btn-taglia" data-toggle="popover" data-placement="right" ',
 		'data-imagepath="',
-		b.imagepath,
+		IFNULL(b.imagepath, '#'),
 		'" ',
 	    'title="Modifica Articolo">',
 	    '<i class="fas fa-image fa-2x"></i>',
