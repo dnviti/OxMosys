@@ -8,7 +8,9 @@ concat(
         'data-filename="',
         a.outfilename,
         '" ',
-        'data-inputs="inidate=date=Data Inizio&findate=date=Data Fine"'
+        'data-inputs="',
+        a.inputs,
+        '"'
         '>',
         a.descri,
         '</button>'

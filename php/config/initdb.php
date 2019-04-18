@@ -346,7 +346,10 @@ class InitDB
                     (
                         `id` INT(11) NOT NULL,
                         `app_reports_type_id` INT(11) NOT NULL,
+                        `outfilename` VARCHAR(255) NOT NULL,
+                        `descri` VARCHAR(255) NOT NULL,
                         `query_path` VARCHAR(255) NOT NULL,
+                        `inputs` VARCHAR(4000) NULL DEFAULT NULL,
                         PRIMARY KEY (id),
 
                         INDEX fk_app_reports_type (app_reports_type_id),
