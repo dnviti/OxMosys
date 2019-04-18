@@ -458,6 +458,8 @@ class Page
         $_components = $this->_components;
         $_templates = $this->_templates;
 
+        $nowDate = new \DateTime();
+
         $page =
             $_templates->header()
             . $_templates->slideMenu()
@@ -467,8 +469,12 @@ class Page
                 $_components->hGridRow([
                     $_components->hGridRow([
                         $_components->selectFromQuery('lov/lov_causali', 'app_warehouse_causals', 'id', 'classic', 'Causali', "", "NO", 2, "", null),
-                        $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1, 'style="max-width: 40%; min-width: 110px;"')
-                    ], "", "max-width:350px;min-width:350px")
+
+                        $_components->hGridRow([
+                            $_components->itemFromColumn('app_warehouse_movements', 'datereg', 'datetime-local', "Data", "", ""),
+                            $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1)
+                        ])
+                    ], "", "margin-top:10px;min-width:350px")
                 ])
             ])
 
@@ -809,7 +815,7 @@ class Component
                             . '" type="' . $itemType
                             . '' . ($itemType == 'number' ? '" step="' . $step . '"' : '')
                             . '" class="form-control" table="' . strtoupper($tableName) . '" name="' . strtoupper($tableName . '-' . $itemData['Field'])
-                            . '" id="' . strtoupper($itemType . '-' . $tableName . '-' . $itemData['Field'])
+                            . '" id="' . strtoupper(str_replace("-", "_", $itemType) . '-' . $tableName . '-' . $itemData['Field'])
                             . '" placeholder="' . ($itemName != null ? str_replace('_', ' ', $itemName) : str_replace('_', ' ', $itemData['Field']))
                             . '" aria-nullable="' . $itemData['Null'] . '" '
                             . $attrib

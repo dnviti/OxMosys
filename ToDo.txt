@@ -1,3 +1,4 @@
-- Creazione Movimento da data selezionata in homepage
+- Creazione Movimento da data selezionata in homepage -- OK
 - Visualizzazione dei movimenti in excel da data a data
 - Nascondere bottone obsolescenza per giacenza > 0
+- Non far andare giacenza a negativo

@@ -221,6 +221,11 @@ $("#f-warehouse-item").on('submit', (function (e) {
  * Source File Name: "90-homepage.js"
  */
 
+// Setta la data ad ora
+// var date = new Date();
+// date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+// $("#DATETIME-LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val(date.toISOString().substr(0, 16));
+
 $(".btn-movimento").click(function (e) {
     var elem = $(this);
     var oldHtmlBtn = $(this).html();
@@ -230,6 +235,7 @@ $(".btn-movimento").click(function (e) {
     // Catturo i dati del movimento dai campi sopra la tabella
     var causale = $("#LOV-APP_WAREHOUSE_CAUSALS-ID").children(":selected");
     var quantita = $("#NUMBER-APP_WAREHOUSE_MOVEMENTS-QUANTITY").val();
+    var data = $("#DATETIME_LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val();
 
     // Catturo i dati dal bottone (dati di riga)
     /** */
@@ -254,6 +260,11 @@ $(".btn-movimento").click(function (e) {
         ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-QUANTITY"] = quantita * signMult;
         ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-USERREG"] = $("#p_user_id").val();
         ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-USERUPDATE"] = $("#p_user_id").val();
+        if (data) {
+            var dateObj = new Date(data);
+            dateObj.setTime(dateObj.getTime() - dateObj.getTimezoneOffset() * 60 * 1000);
+            ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-LASTUPDATE"] = dateObj.toISOString().slice(0, 19).replace('T', ' ');
+        }
 
         sendAjaxData(
             elem.attr("ajax-action"),
@@ -314,7 +325,7 @@ $('.btn-taglia').popover({
     html: true,
     trigger: 'hover',
     placement: 'right',
-    title: function() {
+    title: function () {
         return '-';
     },
     content: function () {
