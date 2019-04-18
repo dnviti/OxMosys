@@ -63,7 +63,7 @@ $("button.ajax-action").click(function (event) {
                             if (window.opener != null) {
                                 var callback = function () {
                                     window.opener.location.reload(false);
-                                    window.close();
+                                    //window.close();
                                 }
                                 bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
                             } else {
@@ -90,7 +90,7 @@ $("button.ajax-action").click(function (event) {
                     if (window.opener != null) {
                         var callback = function () {
                             window.opener.location.reload(false);
-                            window.close();
+                            //window.close();
                         }
                         bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
                     } else {

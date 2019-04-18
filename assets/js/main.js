@@ -82,6 +82,34 @@ function getQueryValueAsync(sql, callback) {
     });
 }
 
+function getQueryFileValueAsync(sqlPath, formSerial, callback) {
+    var jsonRes;
+
+    request = $.ajax({
+        url: "php/actions/queryFile.php",
+        type: "post",
+        dataType: "json",
+        data: {
+            "QUERY": sqlPath,
+            "SERIAL": formSerial
+        },
+        cache: false,
+        async: true,
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+        callback(response);
+    });
+
+    request.fail(function (jqXHR, textStatus, errorThrown) {
+        console.error(errorThrown);
+    });
+
+    request.always(function () {
+
+    });
+}
+
 function json2Lov(lovId, jsonDict, nullDisplay) {
     let dropdown = $("#" + lovId);
 

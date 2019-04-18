@@ -90,6 +90,8 @@ class InitDB
                                     `app_user_roles_id` INT NOT NULL DEFAULT 3,
                                     PRIMARY KEY (`id`),
                                     UNIQUE `idx_app_users_username` (`username`),
+
+                                    INDEX fk_app_user_roles (app_user_roles_id),
     
                                     CONSTRAINT fk_app_user_roles FOREIGN KEY (app_user_roles_id)
                                     REFERENCES app_user_roles(id)
@@ -103,7 +105,6 @@ class InitDB
                 $adminPassword = '$2y$10$WeX4wUGjx9fMvOnEQQUQne2NuIUfLcq5l9P8/k/7YbzMlB3Y8ATn.'; // default password: admin
                 self::$appDbConn->query("INSERT INTO `app_users` (`id`, `name`, `surname`, `username`, `password`, `userreg`, `app_user_roles_id`) VALUES (1, 'admin', 'admin', 'admin', '$adminPassword', 1, 0)");
             }
-
 
 
 
@@ -125,6 +126,9 @@ class InitDB
                                     `obsolete` TINYINT NOT NULL DEFAULT 0,
                                     `notes` VARCHAR(255) NULL DEFAULT NULL,
                                     PRIMARY KEY (`id`),
+
+                                    INDEX fk_app_suppliers_userreg (userreg),
+                                    INDEX fk_app_suppliers_userupdate (userupdate),
     
                                     CONSTRAINT fk_app_suppliers_userreg FOREIGN KEY (userreg)
                                     REFERENCES app_users(id)
@@ -157,6 +161,9 @@ class InitDB
                                     `notes` VARCHAR(255) NULL DEFAULT NULL,
                                     `obsolete` INT NOT NULL DEFAULT 0,
                                     PRIMARY KEY (`id`),
+
+                                    INDEX fk_app_warehouses_userreg (userreg),
+                                    INDEX fk_app_warehouses_userupdate (userupdate),
     
                                     CONSTRAINT fk_app_warehouses_userreg FOREIGN KEY (userreg)
                                     REFERENCES app_users(id)
@@ -205,6 +212,11 @@ class InitDB
                                     `app_warehouses_id` INT NOT NULL,
                                     `notes` VARCHAR(255) NULL DEFAULT NULL,
                                     PRIMARY KEY (`id`),
+
+                                    INDEX fk_app_warehouse_items_userreg (userreg),
+                                    INDEX fk_app_warehouse_items_userupdate (userupdate),
+                                    INDEX fk_app_warehouse_items_warehouse (app_warehouses_id),
+                                    INDEX fk_app_warehouse_items_supplier (app_suppliers_id),
     
                                     CONSTRAINT fk_app_warehouse_items_userreg FOREIGN KEY (userreg)
                                     REFERENCES app_users(id)
@@ -244,6 +256,9 @@ class InitDB
                                     `userupdate` INT NOT NULL,
                                     `notes` VARCHAR(255) NULL DEFAULT NULL,
                                     PRIMARY KEY (`id`),
+
+                                    INDEX fk_app_warehouse_causals_userreg (userreg),
+                                    INDEX fk_app_warehouse_causals_userupdate (userupdate),
     
                                     CONSTRAINT fk_app_warehouse_causals_userreg FOREIGN KEY (userreg)
                                     REFERENCES app_users(id)
@@ -275,6 +290,13 @@ class InitDB
                         `app_warehouses_id` INT NOT NULL,
                         `notes` VARCHAR(255) NULL DEFAULT NULL,
                         PRIMARY KEY (`id`),
+
+                        INDEX fk_app_warehouse_movements_warehouse_causal (app_warehouse_causals_id),
+                        INDEX fk_app_warehouse_movements_userreg (userreg),
+                        INDEX fk_app_warehouse_movements_userupdate (userupdate),
+                        INDEX fk_app_warehouse_movements_warehouse (app_warehouses_id),
+                        INDEX fk_app_warehouse_movements_supplier (app_suppliers_id),
+                        INDEX fk_app_warehouse_movements_item (app_warehouse_items_id),
     
                         CONSTRAINT fk_app_warehouse_movements_warehouse_causal FOREIGN KEY (app_warehouse_causals_id)
                         REFERENCES app_warehouse_causals(id)
@@ -305,6 +327,34 @@ class InitDB
                         REFERENCES app_warehouse_items(id)
                         ON DELETE NO ACTION
                         ON UPDATE NO ACTION
+                    ) ENGINE = InnoDB
+            ");
+
+            // genero la tabella dei tipi report
+            $this->tablesStatus["app_reports_type"] =
+                self::$appDbConn->query("CREATE TABLE `app_reports_type` 
+                    (
+                        `id` INT(11) NOT NULL,
+                        `descri` VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (id)
+                    ) ENGINE = InnoDB
+            ");
+
+            // genero la tabella dei report
+            $this->tablesStatus["app_reports"] =
+                self::$appDbConn->query("CREATE TABLE `app_reports` 
+                    (
+                        `id` INT(11) NOT NULL,
+                        `app_reports_type_id` INT(11) NOT NULL,
+                        `query_path` VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (id),
+
+                        INDEX fk_app_reports_type (app_reports_type_id),
+
+                        CONSTRAINT fk_app_reports_type FOREIGN KEY (app_reports_type_id)
+                        REFERENCES app_reports_type(id)
+                        ON UPDATE NO ACTION
+                        ON DELETE NO ACTION
                     ) ENGINE = InnoDB
             ");
 

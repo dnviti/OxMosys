@@ -79,6 +79,9 @@ class Page
             case 8:
                 $this->compiledPage = $this->warehouse_items_list($pnum);
                 break;
+            case 9:
+                $this->compiledPage = $this->warehouse_reports($pnum);
+                break;
         }
     }
 
@@ -88,7 +91,7 @@ class Page
         $_templates = $this->_templates;
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Configura Database")
             . $_templates->body()
             . $_components->button("Configura Database", 'primary', null, null, 'btn-config-db')
             . $_components->javaScriptLink('configdb')
@@ -103,7 +106,7 @@ class Page
         $_templates = $this->_templates;
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Login")
             . $_templates->body()
             . '<br>'
             . $_components->htmlFromFile('login')
@@ -208,7 +211,7 @@ class Page
         ";
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Fornitore")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->form($form_items, 'f-supplier')
@@ -232,7 +235,7 @@ class Page
         ];
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Lista Articoli")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->hGridRow($gridRow_btn, 'btnNav')
@@ -250,8 +253,13 @@ class Page
 
         isset($_GET["ID"]) ? $rowId = $_GET["ID"] : $rowId = null;
 
-        $isObsoleto = json_decode($_components->valueFromQuery("SELECT obsolete FROM app_warehouse_items WHERE id = " . $rowId), true)[0]["obsolete"];
+        $itemsVals = json_decode($_components->valueFromQuery("SELECT a.obsolete AS obsolete, a.code AS code, b.taglia AS taglia
+                                                                FROM app_warehouse_items a
+                                                                JOIN app_custom_warehouse_items b ON
+                                                                    a.id = b.app_warehouse_items_id
+                                                                WHERE id = " . $rowId), true)[0];
 
+        $isObsoleto = $itemsVals["obsolete"];
         $isObsoleto == 1 ? $isObsoleto = 1 : $isObsoleto = 0;
 
         if (!isset($_GET['ID']) || $_GET['ID'] == '') {
@@ -268,6 +276,10 @@ class Page
                 )
             ];
         } else {
+            $qtaGiac = $this->queryBuilder->run('SELECT COALESCE(SUM(quantity), 0) AS "Tot Giac"
+                                                    FROM app_warehouse_movements a
+                                                    WHERE a.app_warehouse_items_id = ' . $_GET['ID']);
+
             $gridForm_btn = [
                 $_components->button(
                     'Salva',
@@ -280,7 +292,7 @@ class Page
                     "f-warehouse-item"
                 ),
                 // Visualizzo il bottone elimina solo se admin
-                ($this->user["IS_ADMIN"]  == 1 ?
+                ($this->user["IS_ADMIN"] == 1 && $qtaGiac[0][0] == 0 ?
                     $_components->button(
                         'Rendi Obsoleto',
                         'danger',
@@ -323,13 +335,18 @@ class Page
                     $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione"),
                     $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note")
                 ]),
-                $rowId ?
-                    $_components->hGridRow([
-                        '<input id="uploadImage" type="file" accept="assets/img/upd/*" name="image" /><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
-                    ]) : '',
-                $_components->hGridRow(['<br>']),
                 ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
             ], 'f_warehouse_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
+
+            // Caricamento immagine articolo
+            $_components->hGridRow(['<br>']),
+            $rowId ?
+                $_components->hGridRow([
+                    '
+                    <label class="btn btn-primary">
+                        Seleziona Immagine&hellip; <input type="file" id="uploadImage" accept="assets/img/upd/*" name="image" style="display: none;">
+                    </label><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
+                ]) : '',
 
             //Hidden Elements
             $_components->itemFromColumn('app_warehouse_items', 'app_measure_units_id', 'hidden', null, null, 1),
@@ -346,7 +363,7 @@ class Page
         ";
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Art. #" . $itemsVals["code"] . "-" . $itemsVals["taglia"])
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->form($form_items, 'f-warehouse-item')
@@ -440,7 +457,7 @@ class Page
         ";
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Utente")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->form($form_items, 'f-register')
@@ -461,7 +478,7 @@ class Page
         $nowDate = new \DateTime();
 
         $page =
-            $_templates->header()
+            $_templates->header("Homepage")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->vGridRow([
@@ -472,7 +489,7 @@ class Page
 
                         $_components->hGridRow([
                             $_components->itemFromColumn('app_warehouse_movements', 'datereg', 'datetime-local', "Data", "", ""),
-                            $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1)
+                            $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1, 'min="1"')
                         ])
                     ], "", "margin-top:10px;min-width:350px")
                 ])
@@ -492,7 +509,7 @@ class Page
         $_templates = $this->_templates;
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Lista Utenti")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->hGridRow([
@@ -515,11 +532,27 @@ class Page
         ];
 
         $page = ''
-            . $_templates->header()
+            . $_templates->header("Lista Fornitori")
             . $_templates->slideMenu()
             . $_templates->body()
             . $_components->hGridRow($gridRow_btn, 'btnNav')
             . $_components->tableFromQuery('report/report_fornitori', 'table_fornitori', 'tbContainer', 'Lista Fornitori')
+            . $_templates->footer();
+
+        return $page;
+    }
+
+    public function warehouse_reports($pnum)
+    {
+        $_SESSION["PAGE"]["ID"] = $pnum;
+        $_components = $this->_components;
+        $_templates = $this->_templates;
+
+        $page = ''
+            . $_templates->header("Report Magazzino")
+            . $_templates->slideMenu()
+            . $_templates->body()
+            . $_components->tableFromQuery('report/report_report_maga', 'table_report_maga', 'tbContainer', 'Lista Report Magazzino')
             . $_templates->footer();
 
         return $page;
@@ -860,6 +893,33 @@ class Component
         }
     }
 
+
+    public function valueFromQueryFile($filepath)
+    {
+        //$query = file_get_contents($this->app::$config["paths"]["sql"] . $queryName . '.sql');
+
+        if (isset($filepath)) {
+            if ($result = $this->app::$dbConn->query(file_get_contents($this->app::$config["paths"]["sql"] . $filepath))) {
+
+
+                // get table data
+                $valueArray = [];
+
+                while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($valueArray, $tableRows);
+                }
+
+                //$result->close();
+
+                $jsonData = json_encode($valueArray);
+                //var_dump($jsonData);
+                return $jsonData;
+            }
+        } else {
+            return "ERROR: No query defined";
+        }
+    }
+
     public function valueFromQueryPhp($query)
     {
 
@@ -1089,7 +1149,7 @@ class Asset
 
 class Template extends Asset
 {
-    public function header()
+    public function header($pageTitle = false)
     {
         $_paths = $this->app::$config["paths"];
 
@@ -1134,10 +1194,11 @@ class Template extends Asset
             $_paths["third-part"] . "bootbox/bootbox.all.min.js",
             $_paths["third-part"] . "fontawesome5/js/all.js",
             $_paths["third-part"] . "bootstrap-notify/bootstrap-notify.min.js",
+            $_paths["third-part"] . "isjs/is.min.js",
             $_paths["js"] . "main.js"
         ]) . '
             </head>
-            <title>OxMosys</title>
+            <title>OxMosys ' . ($pageTitle ? " - " . $pageTitle : "") . '</title>
         <body>';
 
         // Main Page items
@@ -1200,16 +1261,22 @@ class Template extends Asset
         $slidenav .= '<a href="?p=2" id="m-p2" class="list-group-item list-group-item-action filterable-item">Nuovo Articolo</a>
                         <a href="?p=8" id="m-p8" class="list-group-item list-group-item-action filterable-item">Lista Articoli</a>
                     </div>
-                    </span>
-                    <span class="filterable">
+                    </span>';
+
+        $slidenav .= '<span class="filterable">
                     <h6 data-toggle="collapse" href="#collapse-menu-2"><i class="fas fa-chevron-down"></i> Gestione Fornitori</h6>
-                    <div class="row collapse" id="collapse-menu-2">';
-
-        $slidenav .= '<input type="text" class="form-control menu-search-item" id="menu-search-item-2" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">';
-
-        $slidenav .= '
+                    <div class="row collapse" id="collapse-menu-2">
+                    <input type="text" class="form-control menu-search-item" id="menu-search-item-2" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">
                         <a href="?p=5" id="m-p5" class="list-group-item list-group-item-action filterable-item">Lista Fornitori</a>
                         <a href="?p=4" id="m-p4" class="list-group-item list-group-item-action filterable-item">Registrazione Fornitore</a>
+                      
+                    </div>
+                    </span>';
+        $slidenav .= '<span class="filterable">
+                    <h6 data-toggle="collapse" href="#collapse-menu-4"><i class="fas fa-chevron-down"></i> Report</h6>
+                    <div class="row collapse" id="collapse-menu-4">
+                    <input type="text" class="form-control menu-search-item" id="menu-search-item-4" aria-describedby="menuSearchItem" placeholder="Cerca Tipi Report">
+                        <a href="?p=9" id="m-p9" class="list-group-item list-group-item-action filterable-item">Magazzino</a>
                       
                     </div>
                     </span>';
