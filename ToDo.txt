@@ -4,4 +4,4 @@
 
 
 
-- Visualizzazione dei movimenti in excel da data a data (finire passaggio parametri query)
+- Visualizzazione dei movimenti in excel da data a data (finire passaggio parametri query) -- OK

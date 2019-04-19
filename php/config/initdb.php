@@ -344,7 +344,7 @@ class InitDB
             $this->tablesStatus["app_reports"] =
                 self::$appDbConn->query("CREATE TABLE `app_reports` 
                     (
-                        `id` INT(11) NOT NULL,
+                        `id` INT(11) NOT NULL AUTO_INCREMENT,
                         `app_reports_type_id` INT(11) NOT NULL,
                         `outfilename` VARCHAR(255) NOT NULL,
                         `descri` VARCHAR(255) NOT NULL,

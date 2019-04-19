@@ -91,7 +91,7 @@ function getQueryFileValueAsync(sqlPath, formSerial, callback) {
         dataType: "json",
         data: {
             "QUERY": sqlPath,
-            "SERIAL": formSerial
+            "PARAMS": formSerial
         },
         cache: false,
         async: true,

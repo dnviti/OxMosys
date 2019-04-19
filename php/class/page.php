@@ -332,7 +332,7 @@ class Page
                     $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario", false, null, null, '', '', 0.01)
                 ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione"),
+                    $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione", '', '-'),
                     $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note")
                 ]),
                 ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
@@ -894,24 +894,26 @@ class Component
     }
 
 
-    public function valueFromQueryFile($filepath)
+    public function valueFromQueryFile($filepath, $params = [])
     {
         //$query = file_get_contents($this->app::$config["paths"]["sql"] . $queryName . '.sql');
 
         if (isset($filepath)) {
-            if ($result = $this->app::$dbConn->query(file_get_contents($this->app::$config["paths"]["sql"] . $filepath))) {
+            $query = file_get_contents($this->app::$config["paths"]["sql"] . $filepath);
 
-
+            if ($query) {
+                $this->app::$qb->setFetchMode(PDO::FETCH_ASSOC);
+                $result = $this->app::$qb->run($query, $params);
                 // get table data
-                $valueArray = [];
+                // $valueArray = [];
 
-                while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
-                    array_push($valueArray, $tableRows);
-                }
+                // while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
+                //     array_push($valueArray, $tableRows);
+                // }
 
                 //$result->close();
 
-                $jsonData = json_encode($valueArray);
+                $jsonData = json_encode($result);
                 //var_dump($jsonData);
                 return $jsonData;
             }

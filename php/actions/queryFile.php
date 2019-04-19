@@ -14,20 +14,22 @@ $_component = new Component($app, $_SESSION["PAGE"]["ID"]);
 
 $filepath = $_POST["QUERY"];
 
-// try {
-//     $post_data = unserialize($_POST["SERIAL"]);
-//     $where = '';
+$params = [];
 
-//     if ($post_data) {
-//         // costruisco la where
+if ($_POST["PARAMS"]) {
 
-//     }
-// } catch (\Throwable $th) {
-//     $where = '';
-// }
+    parse_str($_POST["PARAMS"], $params);
+
+    $params = array_values($params);
+    /**
+     * 'inidate' => string '2019-04-01' (length=10)
+     * 'findate' => string '2019-04-30' (length=10)
+     * 
+     */
+}
 
 
-$jsonRes = $_component->valueFromQueryFile($filepath);
+$jsonRes = $_component->valueFromQueryFile($filepath, $params);
 
 // var_dump($jsonRes);
 //$return = $_POST;
