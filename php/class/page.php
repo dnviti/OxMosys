@@ -182,18 +182,18 @@ class Page
                 //     $_components->itemFromColumn('app_suppliers', 'code', 'hidden', null, null, '0'),
                 // ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_suppliers', 'buname', 'text', "Ragione Sociale"),
-                    $_components->itemFromColumn('app_suppliers', 'vatid', 'text', "P.IVA/C.Fiscale"),
+                    $_components->itemFromColumn('app_suppliers', 'buname', 'text', "Ragione Sociale", "Ragione Sociale"),
+                    $_components->itemFromColumn('app_suppliers', 'vatid', 'text', "P.IVA/C.Fiscale", "P.IVA/C.Fiscale"),
                 ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_suppliers', 'email', 'email', "Email"),
+                    $_components->itemFromColumn('app_suppliers', 'email', 'email', "Email", "Email"),
                     $_components->hGridRow([
-                        $_components->itemFromColumn('app_suppliers', 'address', 'text', "Indirizzo"),
-                        $_components->itemFromColumn('app_suppliers', 'telephone', 'text', "Telefono")
+                        $_components->itemFromColumn('app_suppliers', 'address', 'text', "Indirizzo", "Indirizzo"),
+                        $_components->itemFromColumn('app_suppliers', 'telephone', 'text', "Telefono", "Telefono")
                     ])
                 ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_suppliers', 'notes', 'textarea', "Note")
+                    $_components->itemFromColumn('app_suppliers', 'notes', 'textarea', "Note", "Note")
                 ]), ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
             ], 'f_register_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
 
@@ -317,23 +317,23 @@ class Page
         $form_items = [
             $_components->vGridRow([
                 $_components->hGridRow([
-                    $_components->selectFromQuery('lov/lov_suppliers', 'app_warehouse_items', 'app_suppliers_id', 'classic', 'Fornitore', "", "NO"),
-                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["GENERE"] : null))
+                    $_components->selectFromQuery('lov/lov_suppliers', 'app_warehouse_items', 'app_suppliers_id', 'classic', 'Fornitore', "", "NO", null, "Fornitore"),
+                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["GENERE"] : "DONNA"), "Genere")
                 ]),
                 $_components->hGridRow(['<br>']),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'tipo', 'autocomplete', "Tipo", false, (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TIPO"] : null)),
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'modello', 'autocomplete', "Modello", false, (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["MODELLO"] : null)),
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'colore', 'autocomplete', "Colore", false, (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["COLORE"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'tipo', 'autocomplete', "Tipo", "Tipo", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TIPO"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'modello', 'autocomplete', "Modello", "Modello", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["MODELLO"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'colore', 'autocomplete', "Colore", "Colore", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["COLORE"] : null)),
                 ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_warehouse_items', 'code', 'text', 'Codice'),
-                    $_components->selectFromQuery('lov/lov_taglie', 'app_custom_warehouse_items', 'taglia', 'classic', 'Taglia', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TAGLIA"] : null)),
-                    $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario", false, null, null, '', '', 0.01)
+                    $_components->itemFromColumn('app_warehouse_items', 'code', 'text', 'Codice', "Codice"),
+                    $_components->selectFromQuery('lov/lov_taglie', 'app_custom_warehouse_items', 'taglia', 'classic', 'Taglia', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TAGLIA"] : "U"), 'Taglia'),
+                    $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario", "Prezzo Unitario", "0", null, '', '', 0.01)
                 ]),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione", '', '-'),
-                    $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note")
+                    $_components->itemFromColumn('app_warehouse_items', 'descri', 'textarea', "Descrizione", 'Descrizione'),
+                    $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note", "Note")
                 ]),
                 ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
             ], 'f_warehouse_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
@@ -485,11 +485,11 @@ class Page
                 '<h5 style="text-align:center">Articoli Movimentabili</h5>',
                 $_components->hGridRow([
                     $_components->hGridRow([
-                        $_components->selectFromQuery('lov/lov_causali', 'app_warehouse_causals', 'id', 'classic', 'Causali', "", "NO", 2, "", null),
+                        $_components->selectFromQuery('lov/lov_causali', 'app_warehouse_causals', 'id', 'classic', 'Causali', "", "NO", 2, "Causali", null),
 
                         $_components->hGridRow([
-                            $_components->itemFromColumn('app_warehouse_movements', 'datereg', 'datetime-local', "Data", "", ""),
-                            $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantità", "", 1, 'min="1"')
+                            $_components->itemFromColumn('app_warehouse_movements', 'datereg', 'date', "Data Mov", "Data Mov", ""),
+                            $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantit&agrave;", "Quantit&agrave;", 1, 'min="1"')
                         ])
                     ], "", "margin-top:10px;min-width:350px")
                 ])
@@ -849,7 +849,7 @@ class Component
                             . '' . ($itemType == 'number' ? '" step="' . $step . '"' : '')
                             . '" class="form-control" table="' . strtoupper($tableName) . '" name="' . strtoupper($tableName . '-' . $itemData['Field'])
                             . '" id="' . strtoupper(str_replace("-", "_", $itemType) . '-' . $tableName . '-' . $itemData['Field'])
-                            . '" placeholder="' . ($itemName != null ? str_replace('_', ' ', $itemName) : str_replace('_', ' ', $itemData['Field']))
+                            . '" placeholder="' . ($itemType == 'date' ? '' : ($itemName != null ? str_replace('_', ' ', $itemName) : str_replace('_', ' ', $itemData['Field'])))
                             . '" aria-nullable="' . $itemData['Null'] . '" '
                             . $attrib
                             . ' />';

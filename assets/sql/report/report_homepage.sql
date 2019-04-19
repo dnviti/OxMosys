@@ -7,8 +7,8 @@ t.tipo AS "Tipo",
 t.modello AS "Modello",
 t.colore AS "Colore",
 t.CODE AS "Codice",
-CONCAT('€ ', FORMAT(t.unitprice, 2)) AS "Prz Uni",
-CONCAT('€ ', format(COALESCE(SUM(t.quantity), 0) * t.unitprice, 2)) AS "Val Giac",
+CONCAT('€ ', t.unitprice) AS "Prz Uni",
+CONCAT('€ ', COALESCE(SUM(t.quantity), 0) * t.unitprice) AS "Val Giac",
 COALESCE(SUM(t.quantity), 0) AS "Tot Giac"
 FROM (
 	SELECT
@@ -29,8 +29,6 @@ FROM (
 	    'APP_WAREHOUSE_MOVEMENTS-ID=',
 	    '&APP_WAREHOUSE_MOVEMENTS-APP_WAREHOUSE_ITEMS_ID=',
 	    a.id,
-	    '&APP_WAREHOUSE_MOVEMENTS-APP_SUPPLIERS_ID=',
-	    c.id,
 	    '&APP_WAREHOUSE_MOVEMENTS-APP_WAREHOUSES_ID=',
 	    a.app_warehouses_id,
 	    '" ',

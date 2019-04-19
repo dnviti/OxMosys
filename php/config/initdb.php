@@ -115,9 +115,9 @@ class InitDB
                                     `id` INT NOT NULL AUTO_INCREMENT, 
                                     `code` VARCHAR(255) NOT NULL DEFAULT '0', 
                                     `buname` VARCHAR(255) NOT NULL, 
-                                    `vatid` VARCHAR(255) NOT NULL, 
+                                    `vatid` VARCHAR(255) NULL DEFAULT NULL, 
                                     `telephone` VARCHAR(255) NULL DEFAULT NULL, 
-                                    `address` VARCHAR(255) NOT NULL, 
+                                    `address` VARCHAR(255) NULL DEFAULT NULL, 
                                     `email` VARCHAR(255) NULL DEFAULT NULL,
                                     `userreg` INT NOT NULL,
                                     `userupdate` INT NOT NULL,
@@ -199,8 +199,8 @@ class InitDB
                 self::$appDbConn->query("CREATE TABLE `app_warehouse_items` 
                                 (
                                     `id` INT NOT NULL AUTO_INCREMENT, 
-                                    `code` VARCHAR(255) NOT NULL, 
-                                    `descri` VARCHAR(255) NOT NULL, 
+                                    `code` VARCHAR(255) NULL DEFAULT NULL, 
+                                    `descri` VARCHAR(255) NULL DEFAULT NULL, 
                                     `unitprice` DOUBLE NOT NULL, 
                                     `app_measure_units_id` INT NOT NULL DEFAULT 1, 
                                     `datereg` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
@@ -286,7 +286,6 @@ class InitDB
                         `userreg` INT NOT NULL,
                         `userupdate` INT NOT NULL,
                         `app_warehouse_causals_id` INT NOT NULL, 
-                        `app_suppliers_id` INT NOT NULL, 
                         `app_warehouses_id` INT NOT NULL,
                         `notes` VARCHAR(255) NULL DEFAULT NULL,
                         PRIMARY KEY (`id`),
@@ -295,7 +294,6 @@ class InitDB
                         INDEX fk_app_warehouse_movements_userreg (userreg),
                         INDEX fk_app_warehouse_movements_userupdate (userupdate),
                         INDEX fk_app_warehouse_movements_warehouse (app_warehouses_id),
-                        INDEX fk_app_warehouse_movements_supplier (app_suppliers_id),
                         INDEX fk_app_warehouse_movements_item (app_warehouse_items_id),
     
                         CONSTRAINT fk_app_warehouse_movements_warehouse_causal FOREIGN KEY (app_warehouse_causals_id)
@@ -315,11 +313,6 @@ class InitDB
     
                         CONSTRAINT fk_app_warehouse_movements_warehouse FOREIGN KEY (app_warehouses_id)
                         REFERENCES app_warehouses(id)
-                        ON DELETE NO ACTION
-                        ON UPDATE NO ACTION,
-    
-                        CONSTRAINT fk_app_warehouse_movements_supplier FOREIGN KEY (app_suppliers_id)
-                        REFERENCES app_suppliers(id)
                         ON DELETE NO ACTION
                         ON UPDATE NO ACTION,
     
@@ -376,8 +369,8 @@ class InitDB
                             (
                                 `app_warehouse_items_id` INT NOT NULL, 
                                 `tipo` VARCHAR(255) NOT NULL,
-                                `modello` VARCHAR(255) NOT NULL,
-                                `colore` VARCHAR(255) NOT NULL,
+                                `modello` VARCHAR(255) NULL DEFAULT NULL,
+                                `colore` VARCHAR(255) NULL DEFAULT NULL,
                                 `taglia` VARCHAR(255) NOT NULL,
                                 `genere` VARCHAR(255) NOT NULL,
                                 `imagepath` VARCHAR(255) NULL DEFAULT NULL,
