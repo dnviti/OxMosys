@@ -1,4 +1,2 @@
 - Caricamento differito tabella -- PIU AVANTI
 
-- Differenziare per causale il report "Movimenti x Data"
-
