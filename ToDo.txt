@@ -1,7 +1,4 @@
-- Creazione Movimento da data selezionata in homepage -- OK
-- Nascondere bottone obsolescenza per giacenza > 0 -- OK
-- Non far andare giacenza a negativo -- OK
+- Caricamento differito tabella -- PIU AVANTI
 
+- Differenziare per causale il report "Movimenti x Data"
 
-
-- Visualizzazione dei movimenti in excel da data a data (finire passaggio parametri query) -- OK

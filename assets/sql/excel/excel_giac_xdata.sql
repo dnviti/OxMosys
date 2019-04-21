@@ -21,7 +21,8 @@ FROM (
 	b.colore,
 	a.CODE,
 	a.unitprice,
-	z.quantity
+	z.quantity,
+	a.id AS item_id
 	FROM app_warehouse_items a
 	JOIN app_custom_warehouse_items b ON a.id = b.app_warehouse_items_id
 	JOIN app_suppliers c ON a.app_suppliers_id = c.id
@@ -32,11 +33,4 @@ FROM (
 	OR z.lastupdate IS null
 ) AS t
 GROUP BY 
-`Taglia`,
-`Fornitore`,
-`Genere`,
-`Tipo`,
-`Modello`,
-`Colore`,
-`Codice`,
-`Prz Uni`
+t.item_id

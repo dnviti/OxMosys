@@ -217,5 +217,3 @@ function setHomepageReportProps() {
         }
     });
 }
-
-setHomepageReportProps();

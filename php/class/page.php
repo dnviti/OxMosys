@@ -219,6 +219,7 @@ class Page
             . $_components->javaScript($jsObsoleto)
             //. $_components->javaScriptLink('suppliers')
             //. $_components->javaScriptLink('slidemenu')
+            . $_components->javaScript("HoldOn.close()")
             . $_templates->footer();
 
         return $page;
@@ -370,6 +371,7 @@ class Page
             . $_components->hGridRow(['<span id="dettWareItem"></span>'])
             . $_components->javaScript($jsObsoleto)
             //. $_components->javaScriptLink('slidemenu')
+            . $_components->javaScript("HoldOn.close()")
             . $_templates->footer();
 
         return $page;
@@ -463,6 +465,7 @@ class Page
             . $_components->form($form_items, 'f-register')
             . $_components->hGridRow(['<span id="dettRegUser"></span>'])
             . $_components->javaScript($jsObsoleto)
+            . $_components->javaScript("HoldOn.close()")
             . $_templates->footer();
 
         return $page;
@@ -1155,6 +1158,8 @@ class Template extends Asset
     {
         $_paths = $this->app::$config["paths"];
 
+        $_components = $this->pageComponents;
+
         $header = '<!DOCTYPE html>
         <html lang="en">
             
@@ -1198,10 +1203,13 @@ class Template extends Asset
             $_paths["third-part"] . "bootstrap-notify/bootstrap-notify.min.js",
             $_paths["third-part"] . "isjs/is.min.js",
             $_paths["js"] . "main.js"
-        ]) . '
-            </head>
+        ]);
+
+        $header .= '</head>
             <title>OxMosys ' . ($pageTitle ? " - " . $pageTitle : "") . '</title>
         <body>';
+
+        $header .= $_components->javaScriptLinkToMerge("header");
 
         // Main Page items
         // Current User ID
