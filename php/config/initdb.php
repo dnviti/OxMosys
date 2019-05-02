@@ -82,7 +82,7 @@ class InitDB
                                     `surname` VARCHAR(255) NOT NULL, 
                                     `username` VARCHAR(255) NOT NULL, 
                                     `password` VARCHAR(255) NOT NULL, 
-                                    `email` VARCHAR(255) NULL DEFAULT NULL, 
+                                    `email` VARCHAR(255) NOT NULL, 
                                     `notes` VARCHAR(255) NULL DEFAULT NULL, 
                                     `userreg` INT NOT NULL, 
                                     `datereg` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
