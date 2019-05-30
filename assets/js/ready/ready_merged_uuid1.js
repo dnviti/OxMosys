@@ -178,29 +178,34 @@ if ($("#p_page_id").attr("ID") != -1) {
  * Source File Name: "30-datatable.js"
  */
 
-/* Datatable Initialization */
-var datatable = $(".tbContainer table").DataTable({
-    "paging": true,
-    "pagingType": "simple",
-    "pageLength": 25,
-    "lengthChange": true,
-    responsive: true,
+try {
+    /* Datatable Initialization */
+    var datatable = $(".tbContainer table").DataTable({
+        "paging": true,
+        "pagingType": "simple",
+        "pageLength": 25,
+        "lengthChange": true,
+        responsive: true,
 
-    dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 
-    "initComplete": function (settings, json) {
+        "initComplete": function (settings, json) {
+            setHomepageReportProps();
+            HoldOn.close();
+        }
+
+    });
+    /* --------------------- */
+
+    $('.tbContainer table').on('page.dt', function () {
         setHomepageReportProps();
-        HoldOn.close();
-    }
-
-});
-/* --------------------- */
-
-$('.tbContainer table').on('page.dt', function () {
-    setHomepageReportProps();
-});
+    });
+} catch (error) {
+    console.log(error);
+    HoldOn.close();
+}
 /**
  * Source Folder: "assets/js/ready/" 
  * Source File Name: "40-updImage.js"

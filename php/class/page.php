@@ -515,9 +515,12 @@ class Page
             . $_templates->header("Lista Utenti")
             . $_templates->slideMenu()
             . $_templates->body()
+            // Aggiunta Utente Disabilitata
+            /*
             . $_components->hGridRow([
                 $_components->button("Nuovo Utente", "Primary", "7")
             ], 'btnNav')
+            */
             . $_components->tableFromQuery('report/report_utenti', 'table_utenti', 'tbContainer', 'Lista Utenti')
             . $_templates->footer();
 
