@@ -6,7 +6,7 @@ t.genere AS "Genere",
 t.tipo AS "Tipo",
 t.modello AS "Modello",
 t.colore AS "Colore",
-t.CODE AS "Codice",
+t.code AS "Codice",
 CONCAT('€ ', t.unitprice) AS "Prz Uni",
 CONCAT('€ ', COALESCE(SUM(t.quantity), 0) * t.unitprice) AS "Val Giac",
 COALESCE(SUM(t.quantity), 0) AS "Tot Giac"
