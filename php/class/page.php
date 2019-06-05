@@ -1182,7 +1182,7 @@ class Template extends Asset
             $_paths["third-part"] . "slideout/slideout.css",
             $_paths["third-part"] . "hamburgers/hamburgers.min.css",
             $_paths["third-part"] . "holdon/HoldOn.min.css",
-            $_paths["third-part"] . "DataTables/dataTables.min.css",
+            $_paths["third-part"] . "DataTables/datatables.min.css",
             $_paths["third-part"] . "DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css",
             $_paths["third-part"] . "animate/animate.css",
             $_paths["css"] . "style.css"
