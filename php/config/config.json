@@ -5,7 +5,7 @@
         "username": "dbuser",
         "password": "dbuser",
         "database": "oxmosys_db",
-        "isinit": true
+        "isinit": false
     },
     "paths": {
         "configs": "php\/config\/",
