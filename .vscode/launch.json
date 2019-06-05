@@ -9,6 +9,10 @@
             "request": "launch",
             "port": 9000,
             "log": true,
+            "stopOnEntry": false,
+            "pathMappings": {
+                "/var/www/html": "C:\\Users\\dnvit\\Documents\\GitHub\\OxMosys\\"
+            }
         },
         {
             "name": "Launch currently open script",

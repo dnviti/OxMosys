@@ -1,2 +1,8 @@
 - Caricamento differito tabella -- PIU AVANTI
 
+- Inserimento ore di lavoro per dipendenti
+  - Inserimento ore reali
+  - Inserimento ore da commercialista
+  - Differenza ore commercialista e reali
+  - Uscire con un report excel
+

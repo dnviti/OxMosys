@@ -103,7 +103,7 @@ class InitDB
             // Inserisco I valori solo se la tabella è stata appena creata
             if ($this->tablesStatus["app_users"]) {
                 $adminPassword = '$2y$10$WeX4wUGjx9fMvOnEQQUQne2NuIUfLcq5l9P8/k/7YbzMlB3Y8ATn.'; // default password: admin
-                self::$appDbConn->query("INSERT INTO `app_users` (`id`, `name`, `surname`, `username`, `password`, `userreg`, `app_user_roles_id`) VALUES (1, 'admin', 'admin', 'admin', '$adminPassword', 1, 0)");
+                self::$appDbConn->query("INSERT INTO `app_users` (`id`, `name`, `surname`, `email`, `username`, `password`, `userreg`, `app_user_roles_id`) VALUES (1, 'admin', 'admin', 'admin@localhost', 'admin', '$adminPassword', 1, 0)");
             }
 
 

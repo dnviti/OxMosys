@@ -20,6 +20,7 @@ class AppConfig
         if (!self::$dbConn) {
             $pdo_connection = self::$config["db"]["type"] . ':host=' . self::$config["db"]["servername"] . ';charset:uft8;';
             self::$dbConn = new PDO($pdo_connection, self::$config["db"]["username"], self::$config["db"]["password"]);
+            self::$dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 
         if (!self::$qb) {
@@ -32,7 +33,7 @@ class AppConfig
     public static function dbExists()
     {
         $dbCorrect = strtoupper(self::$config["db"]["database"]);
-        $dbExists = self::$qb->run("SELECT upper(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbCorrect'");
+        $dbExists = self::$qb->run("SELECT upper(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE UPPER(SCHEMA_NAME) = '$dbCorrect'");
         if (isset($dbExists[0][0]) && (bool)self::$config["db"]["isinit"]) {
             self::$dbConn->exec("USE " . $dbCorrect);
             $dbExists = true;

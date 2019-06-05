@@ -674,16 +674,19 @@ class Component
         }
 
         // Fetch column data by id
-
-        if (isset($query)) {
-            if ($result = $this->app::$dbConn->query($query)) {
-                while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
-                    foreach ($tableRows as &$value) {
-                        $itemVal = $value;
+        try {
+            if (isset($query)) {
+                if ($result = $this->app::$dbConn->query($query)) {
+                    while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
+                        foreach ($tableRows as &$value) {
+                            $itemVal = $value;
+                        }
                     }
+                    //$result->close();
                 }
-                //$result->close();
             }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
 
         // Fetch column properties
@@ -775,17 +778,21 @@ class Component
         }
 
         // Fetch column data by id
-
-        if (isset($query)) {
-            if ($result = $this->app::$dbConn->query($query)) {
-                while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
-                    foreach ($tableRows as &$value) {
-                        $itemVal = $value;
+        try {
+            if (isset($query)) {
+                if ($result = $this->app::$dbConn->query($query)) {
+                    while ($tableRows = $result->fetch(PDO::FETCH_ASSOC)) {
+                        foreach ($tableRows as &$value) {
+                            $itemVal = $value;
+                        }
                     }
+                    //$result->close();
                 }
-                //$result->close();
             }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
+
         if ($itemType == 'date' || $itemType == 'DATE') {
             $itemVal = substr($itemVal, 0, 10);
         }

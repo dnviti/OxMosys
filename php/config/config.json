@@ -1,1 +1,41 @@
-{"db":{"type":"mysql","servername":"localhost","username":"root","password":"","database":"oxmosys_db","isinit":true},"paths":{"configs":"php\/config\/","classes":"php\/class\/","views":"views\/","css":"assets\/css\/","js":"assets\/js\/","html":"assets\/html\/","third-part":"assets\/third-part\/","sql":"assets\/sql\/","img":"assets\/img\/"},"licensing":{"USR":"","WARE":"","SUPP":"","CLI":"","PROD":"","ACCO":""},"install-info":{"ragsoc":"Bottega Intrecci","cfisc":"","email":{"smtp_host":"smtp.gmail.com","smtp_username":"bottegaintrecci@gmail.com","smtp_password":"Specchiribell1","smtp_secure":"tls","smtp_port":587,"smtp_debug":0}}}
+{
+    "db": {
+        "type": "mysql",
+        "servername": "localhost",
+        "username": "dbuser",
+        "password": "dbuser",
+        "database": "oxmosys_db",
+        "isinit": true
+    },
+    "paths": {
+        "configs": "php\/config\/",
+        "classes": "php\/class\/",
+        "views": "views\/",
+        "css": "assets\/css\/",
+        "js": "assets\/js\/",
+        "html": "assets\/html\/",
+        "third-part": "assets\/third-part\/",
+        "sql": "assets\/sql\/",
+        "img": "assets\/img\/"
+    },
+    "licensing": {
+        "USR": "",
+        "WARE": "",
+        "SUPP": "",
+        "CLI": "",
+        "PROD": "",
+        "ACCO": ""
+    },
+    "install-info": {
+        "ragsoc": "Bottega Intrecci",
+        "cfisc": "",
+        "email": {
+            "smtp_host": "smtp.gmail.com",
+            "smtp_username": "bottegaintrecci@gmail.com",
+            "smtp_password": "Specchiribell1",
+            "smtp_secure": "tls",
+            "smtp_port": 587,
+            "smtp_debug": 0
+        }
+    }
+}

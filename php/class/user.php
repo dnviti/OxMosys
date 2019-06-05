@@ -8,6 +8,7 @@ class User
     public $username;
     public $user_id;
     public $app, $queryBuilder;
+    public $dbConn;
 
     public function __construct()
     {
@@ -83,11 +84,13 @@ class User
             // $qb = new QueryBuilder($this->dbConn);
             // $sql = "SELECT password, id FROM app_users WHERE upper(username) = upper('$user') and obsolete = 0";
 
+            // $result = $this->dbConn->query($sql)->execute();
+
             $result = $this->queryBuilder
                 ->table("app_users")
                 ->select(array("password", "id"))
                 ->where("username", "=", $user)
-                ->where("obsolete", "=", "0")
+                ->where("obsolete", "=", 0)
                 ->run();
 
             if (sizeof($result) > 0) {
