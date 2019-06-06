@@ -885,7 +885,12 @@ class Component
         //$query = file_get_contents($this->app::$config["paths"]["sql"] . $queryName . '.sql');
 
         if (isset($query)) {
-            if ($result = $this->app::$dbConn->query($query)) {
+            try {
+                $result = $this->app::$dbConn->query($query);
+            } catch (\Throwable $th) {
+                $result = false;
+            }
+            if ($result) {
 
 
                 // get table data
@@ -1084,10 +1089,13 @@ class Component
             }
 
             foreach ($files as $file) {
-                $fullFilePath = $jsPath . "/" . $file;
-                $topFileComment = "\n/**\r\n * Source Folder: \"" . $jsPath . "/\" \r\n * Source File Name: \"" . $file . "\"\r\n */\r\n\r\n";
-                $jsContent = file_get_contents($fullFilePath);
-                fwrite($jsMerge, $topFileComment . $jsContent);
+                $isMerge = strpos($file, '_merged_uuid');
+                if (!$isMerge) {
+                    $fullFilePath = $jsPath . "/" . $file;
+                    $topFileComment = "\n/**\r\n * Source Folder: \"" . $jsPath . "/\" \r\n * Source File Name: \"" . $file . "\"\r\n */\r\n\r\n";
+                    $jsContent = file_get_contents($fullFilePath);
+                    fwrite($jsMerge, $topFileComment . $jsContent);
+                }
             }
 
             // Scrivi il testo alla fine
@@ -1311,9 +1319,15 @@ class Template extends Asset
 
             $slidenav .= '
                     <a href="?p=6" id="m-p6" class="list-group-item list-group-item-action filterable-item">Lista Utenti</a>
-                    <a href="?p=7" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
+                    <a href="javascript:bootbox.alert(\'Registrazione Utenti Disabilitata\');" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
                 </div>
             ';
+
+            // $slidenav .= '
+            //         <a href="?p=6" id="m-p6" class="list-group-item list-group-item-action filterable-item">Lista Utenti</a>
+            //         <a href="?p=7" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
+            //     </div>
+            // ';
         }
 
         // $slidenav = $slidenav .
