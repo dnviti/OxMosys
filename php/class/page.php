@@ -93,7 +93,8 @@ class Page
         $page = ''
             . $_templates->header("Configura Database")
             . $_templates->body()
-            . $_components->button("Configura Database", 'primary', null, null, 'btn-config-db')
+            . $_components->hGridRow("<h1>Configurare il Database, file presente in \"php\config\database\database_configuration.sql\"</h1>")
+            //. $_components->button("Configura Database", 'primary', null, null, 'btn-config-db')
             . $_components->javaScriptLink('configdb')
             . $_templates->footer();
 
