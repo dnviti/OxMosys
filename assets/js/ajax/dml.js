@@ -69,7 +69,8 @@ $("button.ajax-action").click(function (event) {
                             } else {
                                 bootbox.alert("Operazione Completata");
                             }
-                        }
+                        },
+                        thisButton.attr("ajax-uppercase")
                     );
                 }
             });
@@ -96,7 +97,8 @@ $("button.ajax-action").click(function (event) {
                     } else {
                         bootbox.alert("Operazione Completata");
                     }
-                }
+                },
+                thisButton.attr("ajax-uppercase")
             );
         }
 

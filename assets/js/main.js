@@ -253,7 +253,8 @@ function sendAjaxData(
     loadingMessage = "Caricamento in corso...",
     loadingColor = "#ccb300",
     loadingText = "black",
-    callback = function () {}
+    callback = function () {},
+    uppercase = true
 ) {
 
     modalResultMessageOK = modalResultMessageOK == undefined ? "Operazione Completata" : modalResultMessageOK;
@@ -279,6 +280,8 @@ function sendAjaxData(
     }
 
     serializedData += (form_action_type != null ? "&OPERATION=" + form_action_type : "");
+
+    serializedData += "&UPPERCASE=" + uppercase;
 
     options = {
         theme: "sk-cube-grid",
@@ -336,7 +339,8 @@ function sendAjaxData(
 // notifiche
 function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmail, toPage = null, cback = function () {}, timeout = 500) {
     setTimeout(() => {
-        if (response.substring(0, 3) != "ERR" && response.substring(0, 15) != "<!DOCTYPE html>") {
+        //if (response.substring(0, 3) != "ERR" && response.substring(0, 15) != "<!DOCTYPE html>") {
+        if (!isNaN(response.substring(0, 3))) {
             if (okmess != null && okmess != undefined && okmess) {
                 bootbox.alert(okmess, function () {
                     cback(response);
@@ -357,7 +361,9 @@ function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmai
                     close: {
                         label: btncancel,
                         className: 'btn-secondary',
-                        callback: function () {}
+                        callback: function () {
+                            location.reload();
+                        }
                     },
                     sendMail: {
                         label: btnsendmail,
@@ -378,6 +384,11 @@ function showModalAjaxResultDebug(response, okmess, title, btncancel, btnsendmai
                                 modalResultMessageOK = "Segnalazione Inviata",
                                 modalResultMessageERROR = "Errore durante l'invio",
                                 loadingMessage = "Invio mail in corso...",
+                                loadingColor = "#ccb300",
+                                loadingText = "black",
+                                callback = function () {
+                                    location.reload();
+                                },
                             );
                         }
                     }

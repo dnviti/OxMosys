@@ -6,3 +6,7 @@
   - Differenza ore commercialista e reali
   - Uscire con un report excel
 
+- Per la contabilita'
+  - Pensare ad un account apposito che inserisce nero ed uno bianco
+  - L'account nero vede anche bianco e il bianco non vede nero
+  - Questo applicato ai movimenti di magazzino ed alla contabilita'
