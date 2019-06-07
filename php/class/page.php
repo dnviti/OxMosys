@@ -1319,15 +1319,9 @@ class Template extends Asset
 
             $slidenav .= '
                     <a href="?p=6" id="m-p6" class="list-group-item list-group-item-action filterable-item">Lista Utenti</a>
-                    <a href="javascript:bootbox.alert(\'Registrazione Utenti Disabilitata\');" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
+                    <a href="?p=7" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
                 </div>
             ';
-
-            // $slidenav .= '
-            //         <a href="?p=6" id="m-p6" class="list-group-item list-group-item-action filterable-item">Lista Utenti</a>
-            //         <a href="?p=7" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
-            //     </div>
-            // ';
         }
 
         // $slidenav = $slidenav .
