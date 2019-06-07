@@ -2,9 +2,9 @@
     "db": {
         "type": "mysql",
         "servername": "localhost",
-        "username": "dbuser",
-        "password": "dbuser",
-        "database": "oxmosys_db",
+        "username": "bottega611",
+        "password": "",
+        "database": "my_bottega611",
         "isinit": false
     },
     "paths": {
