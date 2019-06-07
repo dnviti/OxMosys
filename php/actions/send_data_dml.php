@@ -160,5 +160,6 @@ try {
     echo "ERR";
     $header = "HTTP/1.0 404 Errore: " . $th->getCode();
     $header .= " - " . $th->getMessage();
+    $DML->logdml("INSERT", $DML->tbname, $params, null, $th->getMessage());
     die(header($header));
 }
