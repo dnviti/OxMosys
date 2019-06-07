@@ -253,7 +253,8 @@ function sendAjaxData(
     loadingMessage = "Caricamento in corso...",
     loadingColor = "#ccb300",
     loadingText = "black",
-    callback = function () {}
+    callback = function () {},
+    uppercase = true
 ) {
 
     modalResultMessageOK = modalResultMessageOK == undefined ? "Operazione Completata" : modalResultMessageOK;
@@ -279,6 +280,8 @@ function sendAjaxData(
     }
 
     serializedData += (form_action_type != null ? "&OPERATION=" + form_action_type : "");
+
+    serializedData += "&UPPERCASE=" + uppercase;
 
     options = {
         theme: "sk-cube-grid",

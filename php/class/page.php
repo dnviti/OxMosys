@@ -399,7 +399,8 @@ class Page
                     'btn-insert',
                     "php/actions/send_data_dml.php",
                     "I",
-                    "f-register"
+                    "f-register",
+                    false
                 )
             ];
         } else {
@@ -412,7 +413,8 @@ class Page
                     'btn-update',
                     "php/actions/send_data_dml.php",
                     "U",
-                    "f-register"
+                    "f-register",
+                    false
                 ),
                 // Visualizzo il bottone elimina solo se admin
                 ($this->user["IS_ADMIN"]  == 1 ?
@@ -424,7 +426,8 @@ class Page
                         'btn-delete',
                         "php/actions/send_data_dml.php",
                         "D",
-                        "f-register"
+                        "f-register",
+                        false
                     ) : null)
             ];
         }
@@ -437,7 +440,8 @@ class Page
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_users', 'username', 'text', "Username"),
-                    $_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null, (isset($_GET["ID"]) ? 'disabled' : null)),
+                    $_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null),
+                    //$_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null, (isset($_GET["ID"]) ? 'disabled' : null)),
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_users', 'email', 'email', "e-Mail"),
@@ -516,11 +520,11 @@ class Page
             . $_templates->slideMenu()
             . $_templates->body()
             // Aggiunta Utente Disabilitata
-            /*
+
             . $_components->hGridRow([
                 $_components->button("Nuovo Utente", "Primary", "7")
             ], 'btnNav')
-            */
+
             . $_components->tableFromQuery('report/report_utenti', 'table_utenti', 'tbContainer', 'Lista Utenti')
             . $_templates->footer();
 
@@ -1016,7 +1020,8 @@ class Component
         $id = '',
         $ajaxAction = null,
         $ajaxActionType = null,
-        $ajaxForm = null
+        $ajaxForm = null,
+        $uppercase = true
     ) {
         if (!is_null($page) && is_null($ajaxAction)) {
             $onclick = ' onclick="javascript:event.preventDefault();location.href=\'?p=' . $page . '\'"';
@@ -1028,10 +1033,12 @@ class Component
             $ajaxAction = !is_null($ajaxAction) ? ' ajax-action="' . $ajaxAction . '"' : '';
             $ajaxActionType = !is_null($ajaxActionType) ? ' ajax-action-type="' . $ajaxActionType . '"' : '';
             $ajaxForm = !is_null($ajaxForm) ? ' ajax-form="' . $ajaxForm . '"' : '';
+            $uppercase = !is_null($uppercase) ? ' ajax-uppercase="' . $uppercase . '"' : '';
         } else {
             $ajaxAction = "";
             $ajaxActionType = "";
             $ajaxForm = "";
+            $uppercase = "";
         }
 
         $button = '<button type="button"'
@@ -1042,6 +1049,7 @@ class Component
             . $ajaxAction
             . $ajaxActionType
             . $ajaxForm
+            . $uppercase
             . '>' . $text . '</button>';
 
         return $button;
