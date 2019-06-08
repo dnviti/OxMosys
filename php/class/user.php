@@ -5,8 +5,7 @@ use Exception;
 
 class User
 {
-    public $username;
-    public $user_id;
+    public $username, $name, $surname, $user_id, $user_role, $user_role_id, $is_admin;
     public $app, $queryBuilder;
     public $dbConn;
 
@@ -88,7 +87,7 @@ class User
 
             $result = $this->queryBuilder
                 ->table("app_users")
-                ->select(array("password", "id"))
+                ->select(array("password", "id", "name", "surname", "app_user_roles_id"))
                 ->where("username", "=", $user)
                 ->where("obsolete", "=", 0)
                 ->run();
@@ -104,6 +103,11 @@ class User
                 if ($pass) {
                     $this->username = $user;
                     $this->user_id = $userid;
+                    $this->name = $queryRes[2];
+                    $this->surname = $queryRes[3];
+                    $this->user_role_id = $queryRes[4];
+                    $this->user_role = $this->getRole();
+                    $this->is_admin = $this->isAdmin();
 
                     return true;
                 } else {
@@ -169,12 +173,31 @@ class User
         }
     }
 
+    public function getRole()
+    {
+        // $sql = "SELECT 1 FROM app_users WHERE upper(username) = upper('$this->username') and app_user_role_id = 0";
+        // $result = $this->dbConn->query($sql);
+
+        $result = $this->queryBuilder
+            ->table("app_user_roles")
+            ->select(array("descri"))
+            ->where("id", "=", $this->user_role_id)
+            ->run();
+
+        $queryRes = $result[0];
+
+        return $queryRes[0];
+    }
+
     public function getProperties()
     {
         return array(
-            "USERNAME" => $this->username,
-            "USER_ID"  => (int)$this->user_id,
-            "IS_ADMIN" => $this->isAdmin($this->dbConn)
+            "USERNAME"      =>  $this->username,
+            "BIRTHNAME"     =>  $this->name . " " . $this->surname,
+            "USER_ID"       =>  (int)$this->user_id,
+            "USER_ROLE_ID"  =>  (int)$this->user_role_id,
+            "USER_ROLE"     =>  $this->user_role,
+            "IS_ADMIN"      =>  (int)$this->is_admin
         );
     }
 }

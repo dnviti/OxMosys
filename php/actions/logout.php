@@ -4,23 +4,13 @@ chdir("../../");
 include "php/config/requires.php";
 
 use Oxmosys\Cookie;
+use Oxmosys\DML;
 
 session_start();
-/*
-if (isset($_SERVER['HTTP_COOKIE'])) {
-    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
-    foreach ($cookies as $cookie) {
-        $parts = explode('=', $cookie);
-        $name = trim($parts[0]);
-        setcookie($name, '', time() - 1000);
-        setcookie($name, '', time() - 1000, '/');
-    }
-}
 
- */
-// Initialize the session.
-// If you are using session_name("something"), don't forget it now!
-session_start();
+$ck = Cookie::get("USER")["USERNAME"];
+
+DML::logdml("LOGOUT", "APP_USERS", Cookie::get("USER"));
 
 // Unset all of the session variables.
 $_SESSION = array();

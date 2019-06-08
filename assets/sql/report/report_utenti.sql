@@ -11,5 +11,6 @@ concat(
 	r.descri as Ruolo
 from app_users a
 join app_user_roles r on a.app_user_roles_id = r.id
-where a.obsolete = 0
+where a.obsolete = ?
+and r.id >= ?
 order by a.name, a.surname
