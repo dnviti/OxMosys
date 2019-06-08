@@ -57,7 +57,7 @@ abstract class Cookie
         return $ret;
     }
 
-    public function unset(string $name)
+    public static function unset(string $name)
     {
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();

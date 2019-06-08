@@ -2,6 +2,7 @@
 
 use Oxmosys\AppConfig;
 use Oxmosys\QueryBuilder;
+use Oxmosys\Cookie;
 
 use Exception;
 
@@ -82,14 +83,20 @@ class DML
         $this->childrenTables = $groupByTable;
     }
 
-    public function logdml($type, $table, $params, $lastid = null, $errormess = null)
+    public static function logdml($type, $table, $params, $lastid = null, $errormess = null)
     {
+        $app = new AppConfig();
+        $dbConn = $app::$dbConn;
+        $appConfig = $app::$config;
+        $queryBuilder = $app::$qb;
 
         $json = json_encode($params);
 
         $values = array();
 
-        $values["USERREG"] = $params["USERREG"];
+        $userid = Cookie::get("USER")["USER_ID"];
+
+        $values["USERREG"] = (is_null($userid) ? $params["USER_ID"] : $userid);
         $values["TABLENAME"] = $table;
         $values["OPERATION"] = $type;
         $values["RAWVALUES"] = $json;
@@ -97,7 +104,7 @@ class DML
         $values["ERRMESS"] = $errormess;
 
         try {
-            $res = $this->queryBuilder
+            $res = $queryBuilder
                 ->table("app_dml_operation_log")
                 ->insert($values)
                 ->run();
@@ -106,7 +113,7 @@ class DML
                 throw new Exception("FATAL: LOG GENERATION ERROR!");
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             //die();
         }
     }
@@ -130,13 +137,13 @@ class DML
 
             $lastid = $this->queryBuilder->lastId();
 
-            $this->logdml("INSERT", $this->tbname, $params, $lastid);
+            $this::logdml("INSERT", $this->tbname, $params, $lastid);
 
             if (!($res > 0 ? true : false)) {
                 throw new Exception("DML (INSERT)<br>TABLE (" . $this->tbname . ")");
             }
         } catch (\Throwable $th) {
-            $this->logdml("INSERT", $this->tbname, $params, null, $th->getMessage());
+            $this::logdml("INSERT", $this->tbname, $params, null, $th->getMessage());
             throw $th;
             die();
         }
@@ -165,13 +172,13 @@ class DML
                 ->update($params)
                 ->run();
 
-            $this->logdml("INSERT", $this->tbname, $params);
+            $this::logdml("INSERT", $this->tbname, $params);
 
             if (!($res > -1 ? true : false)) {
                 throw new Exception("DML (UPDATE)<br>TABLE (" . $this->tbname . ")<br>" . $key . " (" . $id . ")");
             }
         } catch (\Throwable $th) {
-            $this->logdml("UPDATE", $this->tbname, $params, null, $th->getMessage());
+            $this::logdml("UPDATE", $this->tbname, $params, null, $th->getMessage());
             throw $th;
             die();
         }
@@ -208,7 +215,7 @@ class DML
                 }
             }
         } catch (\Throwable $th) {
-            $this->logdml("UPDATE", $this->tbname, $params, null, $th->getMessage());
+            $this::logdml("DELETE", $this->tbname, $key . '=' . $id, null, $th->getMessage());
             throw $th;
             die();
         }
