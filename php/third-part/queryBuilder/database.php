@@ -215,12 +215,12 @@ class QueryBuilder
     public function run($query = null, $bind = null, $type = null)
     {
         if ($this->_currentQueryType == 'select') // run select query stored in memory
-            {
-                if (!$this->_isTableSet()) {
-                    return false;
-                }
-                $this->_currentQuery = $this->_buildQuery();
+        {
+            if (!$this->_isTableSet()) {
+                return false;
             }
+            $this->_currentQuery = $this->_buildQuery();
+        }
         $this->_bindings = ($bind)  ? $bind : $this->_bindings;
         $this->_currentQuery = ($query) ? $query : $this->_currentQuery;
         if (!$type) {
@@ -448,28 +448,28 @@ class QueryBuilder
     public function __call($method, $args)
     {
         if (false !== strpos($method, 'where')) // work with where clause
+        {
+            $type = str_replace('where', '', $method);
+            if (false !== strpos($type, '_between')) {
+                // build between clause
+                $type = $this->_addAndOR($type);
+                $this->_buildBetweenClause($args[0], @$args[1], @$args[2], $type);
+            } else if (false !== strpos($type, '_in')) {
+                // build in clause
+                $type = $this->_addAndOR($type);
+                $this->_buildInClause($args[0], $args[1], $type);
+            } else // process or_where( )
             {
-                $type = str_replace('where', '', $method);
-                if (false !== strpos($type, '_between')) {
-                    // build between clause
-                    $type = $this->_addAndOR($type);
-                    $this->_buildBetweenClause($args[0], @$args[1], @$args[2], $type);
-                } else if (false !== strpos($type, '_in')) {
-                    // build in clause
-                    $type = $this->_addAndOR($type);
-                    $this->_buildInClause($args[0], $args[1], $type);
-                } else // process or_where( )
-                    {
-                        $type = str_replace('_', ' ', $type);
-                        $this->where($args[0], @$args[1], @$args[2], $type);
-                    }
-                return $this;
-            } else if (false !== strpos($method, '_join')) // work with joins
-            {
-                $type = str_replace('_join', '', $method);
-                $this->join($args[0], @$args[1], @$args[2], @$args[3], $type);
-                return $this;
-            } else if (false !== strpos($method, '_on')) {
+                $type = str_replace('_', ' ', $type);
+                $this->where($args[0], @$args[1], @$args[2], $type);
+            }
+            return $this;
+        } else if (false !== strpos($method, '_join')) // work with joins
+        {
+            $type = str_replace('_join', '', $method);
+            $this->join($args[0], @$args[1], @$args[2], @$args[3], $type);
+            return $this;
+        } else if (false !== strpos($method, '_on')) {
             $type = str_replace('_on', '', $method);
             $this->on($args[0], @$args[1], @$args[2], $type);
             return $this;
@@ -538,7 +538,7 @@ class QueryBuilder
      */
     protected $_operators = array(
         '=', '<', '>', '<=', '>=', '<>', '!=',
-        'like', 'not like', 'between', 'ilike'
+        'like', 'not like', 'between', 'ilike', 'is'
     );
     /**
      * Queries that need a return result propeerty
@@ -915,5 +915,46 @@ class QueryBuilder
             return @call_user_func_array(array('\\' .
                 _PTCDEBUG_NAMESPACE_, 'stopTimer'), array($reference));
         }
+    }
+
+    /**
+     * Binds values to the query
+     * @param	mixed		$pos		the param position if numeric
+     * @param	mixed		$value		the value to bind the place holder to
+     * @param	contants	$type		a pdo constant to bind values
+     */
+    public function bindValue($statement, $key, $value, $type = null)
+    {
+        if (is_numeric($key)) {
+            $pos = ($key + 1);
+        } else {
+            $pos = $key;
+        }
+        if (is_null($type)) {
+            if (is_null($value)) {
+                $type = \PDO::PARAM_NULL;
+            } elseif (is_int($value)) {
+                $type = \PDO::PARAM_INT;
+            } elseif (is_bool($value)) {
+                $type = \PDO::PARAM_BOOL;
+            } else {
+                $type = \PDO::PARAM_STR;
+            }
+
+            // switch ($value) {
+            //     case is_int($value):
+            //         $type = \PDO::PARAM_INT;
+            //         break;
+            //     case is_bool($value):
+            //         $type = \PDO::PARAM_BOOL;
+            //         break;
+            //     case is_null($value):
+            //         $type = \PDO::PARAM_NULL;
+            //         break;
+            //     default:
+            //         $type = \PDO::PARAM_STR;
+            // }
+        }
+        $statement->bindValue($pos, $value, $type);
     }
 }

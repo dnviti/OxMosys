@@ -441,8 +441,8 @@ class Page
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_users', 'username', 'text', "Username"),
-                    $_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null),
-                    //$_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null, (isset($_GET["ID"]) ? 'disabled' : null)),
+                    //$_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null),
+                    $_components->itemFromColumn('app_users', 'password', 'password', "Password", null, null, (isset($_GET["ID"]) ? 'disabled' : null)),
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_users', 'email', 'email', "e-Mail"),
@@ -526,7 +526,7 @@ class Page
                 $_components->button("Nuovo Utente", "Primary", "7")
             ], 'btnNav')
 
-            . $_components->tableFromQuery('report/report_utenti', 'table_utenti', 'tbContainer', 'Lista Utenti')
+            . $_components->tableFromQuery('report/report_utenti', 'table_utenti', 'tbContainer', 'Lista Utenti', array(0, Cookie::get("USER")["USER_ROLE_ID"]))
             . $_templates->footer();
 
         return $page;
@@ -584,7 +584,7 @@ class Component
         $this->user = Cookie::get("USER");
     }
 
-    public function tableFromQuery($queryName, $id, $class = '', $title = '')
+    public function tableFromQuery($queryName, $id, $class = '', $title = '', $params = array())
     {
 
 
@@ -592,6 +592,12 @@ class Component
 
         if (isset($query)) {
             $statement = $this->app::$dbConn->prepare($query);
+
+            if (sizeof($params) > 0) {
+                foreach ($params as $key => $value) {
+                    $this->app::$qb->bindValue($statement, $key, $value);
+                }
+            }
 
             if ($statement->execute()) {
 
@@ -1266,8 +1272,17 @@ class Template extends Asset
         <div class="container-fluid">
             <div class="row">
                 <!--<div class="col">-->
-                    <h4 style="margin-top: 10px;margin-left: 15px;">Menù</h4>
+                    <h4 style="margin-top: 10px;margin-left: 15px;">Benvenuto</h4>
                 <!--</div>-->
+            </div>
+            <div class="row">
+                <h7 style="margin-top: 10px;margin-left: 15px;">
+                    <p>
+                        <span class="font-weight-bold">' . Cookie::get("USER")["BIRTHNAME"] . '</span>
+                        <br/>
+                        <span class="font-italic">(' . Cookie::get("USER")["USER_ROLE"] . ')</span>
+                    </p>
+                </h7>
             </div>
             <div class="list-group">
                 <div class="row">
@@ -1284,61 +1299,60 @@ class Template extends Asset
                 </div>';
         }
 
-        $slidenav .= '<div class="row">
-        <input type="text" class="form-control" id="menu-search" aria-describedby="menuSearch" placeholder="Cerca Menu">
-        </div>';
+        // Menu generato da Query
 
-        $slidenav .=
-            '<span class="filterable">
-            <h6 data-toggle="collapse" href="#collapse-menu-1"><i class="fas fa-chevron-down"></i> Gestione Magazzino</h6>
-                    <div class="row collapse" id="collapse-menu-1">';
+        $menuSections = $this->queryBuilder
+            ->table("app_slidemenu_sections")
+            ->join("app_slidemenu_sections_role", "app_slidemenu_sections.id", "=", "app_slidemenu_sections_role.app_slidemenu_sections_id")
+            ->select(array("app_slidemenu_sections.text", "app_slidemenu_sections.id"))
+            ->where("app_slidemenu_sections_role.app_user_roles_id", ">=", (int)Cookie::get("USER")["USER_ROLE_ID"])
+            ->where("app_slidemenu_sections.obsolete", "=", 0)
+            ->order("app_slidemenu_sections.id")
+            ->run();
 
-        $slidenav .= '<input type="text" class="form-control menu-search-item" id="menu-search-item-1" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">';
+        if (sizeof($menuSections) > 0) {
 
-        $slidenav .= '<a href="?p=2" id="m-p2" class="list-group-item list-group-item-action filterable-item">Nuovo Articolo</a>
-                        <a href="?p=8" id="m-p8" class="list-group-item list-group-item-action filterable-item">Lista Articoli</a>
-                    </div>
-                    </span>';
-
-        $slidenav .= '<span class="filterable">
-                    <h6 data-toggle="collapse" href="#collapse-menu-2"><i class="fas fa-chevron-down"></i> Gestione Fornitori</h6>
-                    <div class="row collapse" id="collapse-menu-2">
-                    <input type="text" class="form-control menu-search-item" id="menu-search-item-2" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">
-                        <a href="?p=5" id="m-p5" class="list-group-item list-group-item-action filterable-item">Lista Fornitori</a>
-                        <a href="?p=4" id="m-p4" class="list-group-item list-group-item-action filterable-item">Registrazione Fornitore</a>
-                      
-                    </div>
-                    </span>';
-        $slidenav .= '<span class="filterable">
-                    <h6 data-toggle="collapse" href="#collapse-menu-4"><i class="fas fa-chevron-down"></i> Report</h6>
-                    <div class="row collapse" id="collapse-menu-4">
-                    <input type="text" class="form-control menu-search-item" id="menu-search-item-4" aria-describedby="menuSearchItem" placeholder="Cerca Tipi Report">
-                        <a href="?p=9" id="m-p9" class="list-group-item list-group-item-action filterable-item">Magazzino</a>
-                      
-                    </div>
-                    </span>';
-
-        if (isset($this->user["IS_ADMIN"])) {
-            $slidenav .= '
-            <span class="filterable">
-                <h6 data-toggle="collapse" href="#collapse-menu-3"><i class="fas fa-chevron-down"></i> Gestione Utenti</h6>
-                <div class="row collapse" id="collapse-menu-3">';
-
-            $slidenav .= '<input type="text" class="form-control menu-search-item" id="menu-search-item-3" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">';
-
-            $slidenav .= '
-                    <a href="?p=6" id="m-p6" class="list-group-item list-group-item-action filterable-item">Lista Utenti</a>
-                    <a href="?p=7" id="m-p7" class="list-group-item list-group-item-action filterable-item">Registrazione Utente</a>
+            $slidenav .=
+                '
+                <div class="row">
+                    <input type="text" class="form-control" id="menu-search" aria-describedby="menuSearch" placeholder="Cerca Menu">
                 </div>
             ';
-        }
 
-        // $slidenav = $slidenav .
-        //     $_components->hGridRow([
-        //         $_components->logo(''),
-        //         $_components->logo(''),
-        //         $_components->logo('')
-        //     ]);
+            foreach ($menuSections as $key => $value) {
+                $slidenav .=
+                    '
+                    <span class="filterable">
+                        <h6 data-toggle="collapse" href="#collapse-menu-' . $key . '"><i class="fas fa-chevron-down"></i> ' . $value[0] . '</h6>
+                            <div class="row collapse" id="collapse-menu-' . $key . '">
+                ';
+
+                $menuItems = $this->queryBuilder
+                    ->table("app_slidemenu_items")
+                    ->left_join("app_slidemenu_items_role", "app_slidemenu_items_role.app_slidemenu_items_id", "=", "app_slidemenu_items.id")
+                    ->select(array("app_slidemenu_items.pagenum", "app_slidemenu_items.linktext"))
+                    ->where("app_slidemenu_items_role.app_user_roles_id", ">=", (int)Cookie::get("USER")["USER_ROLE_ID"])
+                    ->or_where("app_slidemenu_items_role.app_slidemenu_items_id", "is", null)
+                    ->where("app_slidemenu_items.app_slidemenu_sections_id", "=", (int)$value[1])
+                    ->where("app_slidemenu_items.obsolete", "=", 0)
+                    ->order("app_slidemenu_items.app_slidemenu_sections_id")
+                    ->order("app_slidemenu_items.id")
+                    ->run();
+
+                if (sizeof($menuItems) > 0) {
+                    $slidenav .= '<input type="text" class="form-control menu-search-item" id="menu-search-item-' . $key . '" aria-describedby="menuSearchItem" placeholder="Cerca Funzione">';
+                }
+
+                foreach ($menuItems as $key => $value) {
+
+                    $slidenav .= '<a href="?p=' . $value["pagenum"] . '" id="m-p' . $value["pagenum"] . '" class="list-group-item list-group-item-action filterable-item">' . $value["linktext"] . '</a>';
+                }
+
+                $slidenav .= '
+                        </div>
+                        </span>';
+            }
+        }
         $slidenav = $slidenav . '
               </div>
         </div>
