@@ -1,11 +1,22 @@
 if ($(".tbContainer table").length > 0) {
     try {
-        /* Datatable Initialization */
+        // Datatable Initialization 
         var datatable = $(".tbContainer table").DataTable({
             "paging": true,
-            "pagingType": "simple",
-            "pageLength": 25,
+            "pagingType": "full_numbers",
+            "pageLength": 50,
             "lengthChange": true,
+            "language": {
+                "paginate": {
+                    "next": "Successiva",
+                    "previous": "Precedente",
+                    "first": "Prima",
+                    "last": "Ultima"
+                },
+                "search": "Cerca",
+                "info": "Pagina _PAGE_ di _PAGES_ (Righe _START_/_END_ di _TOTAL_ righe)",
+                "lengthMenu": "Mostra _MENU_ righe"
+            },
             responsive: true,
 
             dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
@@ -18,7 +29,7 @@ if ($(".tbContainer table").length > 0) {
             }
 
         });
-        /* --------------------- */
+        // --------------------- 
 
         $('.tbContainer table').on('page.dt', function () {
             setHomepageReportProps();

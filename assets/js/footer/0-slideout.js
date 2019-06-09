@@ -14,7 +14,7 @@ slideout.on("beforeclose", function () {
     $(".toggle-menu").removeClass("is-active");
 });
 
-document.querySelector(".toggle-menu").addEventListener("mouseenter", function () {
+document.querySelector(".toggle-menu").addEventListener("click", function () {
     slideout.toggle();
     if (slideout.isOpen()) {
         $(".toggle-menu").addClass("is-active");
