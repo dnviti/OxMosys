@@ -21,6 +21,7 @@ class AppConfig
             $pdo_connection = self::$config["db"]["type"] . ':host=' . self::$config["db"]["servername"] . ';charset:uft8;';
             self::$dbConn = new PDO($pdo_connection, self::$config["db"]["username"], self::$config["db"]["password"]);
             self::$dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$dbConn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, FALSE);
         }
 
         if (!self::$qb) {

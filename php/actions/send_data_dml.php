@@ -25,12 +25,12 @@ try {
             foreach ($DML->parentTable as $key => $value) {
                 if ($value["COLUMN"] === 'PASSWORD') {
                     $v_uppercase = false;
-                    $params[$value["COLUMN"]] = password_hash($value["VALUE"], PASSWORD_DEFAULT);
+                    $params[strtolower($value["COLUMN"])] = password_hash($value["VALUE"], PASSWORD_DEFAULT);
                 } else {
-                    $params[$value["COLUMN"]] = $value["VALUE"];
+                    $params[strtolower($value["COLUMN"])] = $value["VALUE"];
                 }
             }
-            $DML->tbname = $value["TABLE"];
+            $DML->tbname = strtolower($value["TABLE"]);
 
             if ($v_uppercase) {
                 $lastId = $DML->insert($params, DML::UPPER_CASE);
@@ -49,15 +49,15 @@ try {
             // Tramite l'id della transazione in corso inserisco gli altri record
             foreach ($DML->childrenTables as $key => $value) {
                 foreach ($DML->childrenTables[$key] as $key2 => $value2) {
-                    if ($value2["COLUMN"] === 'PASSWORD') {
+                    if (strtolower($value2["COLUMN"]) === 'password') {
                         $v_uppercase = false;
-                        $params[$value2["COLUMN"]] = password_hash($value2["VALUE"], PASSWORD_DEFAULT);
+                        $params[strtolower($value2["COLUMN"])] = password_hash($value2["VALUE"], PASSWORD_DEFAULT);
                     } else {
-                        $params[$value2["COLUMN"]] = $value2["VALUE"];
+                        $params[strtolower($value2["COLUMN"])] = $value2["VALUE"];
                     }
                 }
-                $DML->tbname = $value2["TABLE"];
-                $params[$DML->parentTable . "_ID"] = $lastId;
+                $DML->tbname = strtolower($value2["TABLE"]);
+                $params[strtolower($DML->parentTable . "_ID")] = $lastId;
                 if ($v_uppercase) {
                     $DML->insert($params, DML::UPPER_CASE);
                 } else {
@@ -75,19 +75,19 @@ try {
             $params = array();
 
             foreach ($DML->parentTable as $key => $value) {
-                if ($value["COLUMN"] === 'PASSWORD') {
+                if (strtolower($value["COLUMN"]) === 'password') {
                     $v_uppercase = false;
-                    $params[$value["COLUMN"]] = password_hash($value["VALUE"], PASSWORD_DEFAULT);
+                    $params[strtolower($value["COLUMN"])] = password_hash($value["VALUE"], PASSWORD_DEFAULT);
                 } else {
-                    $params[$value["COLUMN"]] = $value["VALUE"];
+                    $params[strtolower($value["COLUMN"])] = $value["VALUE"];
                 }
             }
-            $DML->tbname = $value["TABLE"];
+            $DML->tbname = strtolower($value["TABLE"]);
 
             if ($v_uppercase) {
-                $lastId = $DML->update("ID", $params, DML::UPPER_CASE);
+                $lastId = $DML->update("id", $params, DML::UPPER_CASE);
             } else {
-                $lastId = $DML->update("ID", $params);
+                $lastId = $DML->update("id", $params);
             }
 
             // cancello i vecchi parametri per far posto ai nuovi
@@ -101,19 +101,19 @@ try {
             // Tramite l'id della transazione in corso inserisco gli altri record
             foreach ($DML->childrenTables as $key => $value) {
                 foreach ($DML->childrenTables[$key] as $key2 => $value2) {
-                    if ($value2["COLUMN"] === 'PASSWORD') {
+                    if (strtolower($value2["COLUMN"]) === 'password') {
                         $v_uppercase = false;
-                        $params[$value2["COLUMN"]] = password_hash($value2["VALUE"], PASSWORD_DEFAULT);
+                        $params[strtolower($value2["COLUMN"])] = password_hash($value2["VALUE"], PASSWORD_DEFAULT);
                     } else {
-                        $params[$value2["COLUMN"]] = $value2["VALUE"];
+                        $params[strtolower($value2["COLUMN"])] = $value2["VALUE"];
                     }
                 }
-                $DML->tbname = $value2["TABLE"];
+                $DML->tbname = strtolower($value2["TABLE"]);
                 $params[$DML->parentTable . "_ID"] = $lastId;
                 if ($v_uppercase) {
-                    $DML->update($DML->parentTable . "_ID", $params, DML::UPPER_CASE);
+                    $DML->update(strtolower($DML->parentTable . "_ID"), $params, DML::UPPER_CASE);
                 } else {
-                    $DML->update($DML->parentTable . "_ID", $params);
+                    $DML->update(strtolower($DML->parentTable . "_ID"), $params);
                 }
             }
 
@@ -124,14 +124,14 @@ try {
             $params = array();
 
             foreach ($DML->parentTable as $key => $value) {
-                $params[$value["COLUMN"]] = $value["VALUE"];
+                $params[strtolower($value["COLUMN"])] = $value["VALUE"];
             }
-            $DML->tbname = $value["TABLE"];
+            $DML->tbname = strtolower($value["TABLE"]);
 
             $last_value = end($params);
             $last_key = key($params);
 
-            $lastId = $DML->delete("ID", $last_value);
+            $lastId = $DML->delete("id", $last_value);
 
             // cancello i vecchi parametri per far posto ai nuovi
             unset($params);
@@ -144,11 +144,11 @@ try {
             // Tramite l'id della transazione in corso inserisco gli altri record
             foreach ($DML->childrenTables as $key => $value) {
                 foreach ($DML->childrenTables[$key] as $key2 => $value2) {
-                    $params[$value2["COLUMN"]] = $value2["VALUE"];
+                    $params[strtolower($value2["COLUMN"])] = $value2["VALUE"];
                 }
-                $DML->tbname = $value2["TABLE"];
-                $params[$DML->parentTable . "_ID"] = $lastId;
-                $DML->delete($DML->parentTable . "_ID", $params);
+                $DML->tbname = strtolower($value2["TABLE"]);
+                $params[strtolower($DML->parentTable . "_ID")] = $lastId;
+                $DML->delete(strtolower($DML->parentTable . "_ID"), $params);
             }
 
             break;
@@ -159,7 +159,9 @@ try {
 } catch (\Throwable $th) {
     echo "ERR";
     $header = "HTTP/1.0 404 Errore: " . $th->getCode();
-    $header .= " - " . $th->getMessage();
-    $DML->logdml("INSERT", $DML->tbname, $params, null, $th->getMessage());
+    $header .= "<br>On " . $th->getFile();
+    $header .= "<br>At Line " . $th->getLine();
+    $header .= "<br>" . $th->getMessage();
+    $DML->logdml("INSERT", $DML->tbname, $params, null, $header);
     die(header($header));
 }
