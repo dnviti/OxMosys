@@ -306,7 +306,7 @@ class Page
                         "f-warehouse-item"
                     ) : null)
             ];            // prendo i valori dalla query delle tabelle custom
-            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT tipo, modello, colore, taglia, genere, imagepath FROM app_custom_Warehouse_items WHERE app_warehouse_items_id = " . $_GET['ID']);
+            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT tipo, modello, colore, taglia, genere, imagepath FROM app_custom_warehouse_items WHERE app_warehouse_items_id = " . $_GET['ID']);
         }
 
         // $footer_objs = [
@@ -320,17 +320,17 @@ class Page
             $_components->vGridRow([
                 $_components->hGridRow([
                     $_components->selectFromQuery('lov/lov_suppliers', 'app_warehouse_items', 'app_suppliers_id', 'classic', 'Fornitore', "", "NO", null, "Fornitore"),
-                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["GENERE"] : "DONNA"), "Genere")
+                    $_components->selectFromQuery('lov/lov_generi', 'app_custom_warehouse_items', 'genere', 'classic', 'Genere', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["genere"] : "DONNA"), "Genere")
                 ]),
                 $_components->hGridRow(['<br>']),
                 $_components->hGridRow([
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'tipo', 'autocomplete', "Tipo", "Tipo", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TIPO"] : null)),
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'modello', 'autocomplete', "Modello", "Modello", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["MODELLO"] : null)),
-                    $_components->itemFromColumn('app_custom_warehouse_items', 'colore', 'autocomplete', "Colore", "Colore", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["COLORE"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'tipo', 'autocomplete', "Tipo", "Tipo", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["tipo"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'modello', 'autocomplete', "Modello", "Modello", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["modello"] : null)),
+                    $_components->itemFromColumn('app_custom_warehouse_items', 'colore', 'autocomplete', "Colore", "Colore", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["colore"] : null)),
                 ]),
                 $_components->hGridRow([
                     $_components->itemFromColumn('app_warehouse_items', 'code', 'text', 'Codice', "Codice"),
-                    $_components->selectFromQuery('lov/lov_taglie', 'app_custom_warehouse_items', 'taglia', 'classic', 'Taglia', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["TAGLIA"] : "U"), 'Taglia'),
+                    $_components->selectFromQuery('lov/lov_taglie', 'app_custom_warehouse_items', 'taglia', 'classic', 'Taglia', "", "NO", (isset($app_custom_warehouse_items) ? $app_custom_warehouse_items["taglia"] : "U"), 'Taglia'),
                     $_components->itemFromColumn('app_warehouse_items', 'unitprice', 'number', "Prezzo Unitario", "Prezzo Unitario", "0", null, '', '', 0.01)
                 ]),
                 $_components->hGridRow([
@@ -347,7 +347,7 @@ class Page
                     '
                     <label class="btn btn-primary">
                         Seleziona Immagine&hellip; <input type="file" id="uploadImage" accept="assets/img/upd/*" name="image" style="display: none;">
-                    </label><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["IMAGEPATH"] . '" /></div>' : '')
+                    </label><br><br>' . ($rowId ? '<div id="preview"><img src="' . $app_custom_warehouse_items["imagepath"] . '" /></div>' : '')
                 ]) : '',
 
             //Hidden Elements
