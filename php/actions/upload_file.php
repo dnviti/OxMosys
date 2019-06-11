@@ -25,7 +25,7 @@ try {
             if (move_uploaded_file($tmp, $path)) {
                 echo $path;
                 //insert form data in the database
-                $insert = $app::$qb->run("UPDATE app_custom_warehouse_items SET imagepath = '$path' WHERE APP_WAREHOUSE_ITEMS_ID = " . $_POST["APP_WAREHOUSE_ITEMS-ID"]);
+                $insert = $app::$qb->run("UPDATE app_custom_warehouse_items SET imagepath = '$path' WHERE app_warehouse_items_id = " . $_POST["APP_WAREHOUSE_ITEMS-ID"]);
                 //echo $insert?'ok':'err';
             }
         } else {

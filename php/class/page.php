@@ -306,7 +306,7 @@ class Page
                         "f-warehouse-item"
                     ) : null)
             ];            // prendo i valori dalla query delle tabelle custom
-            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT TIPO, MODELLO, COLORE, TAGLIA, GENERE, IMAGEPATH FROM APP_CUSTOM_WAREHOUSE_ITEMS WHERE APP_WAREHOUSE_ITEMS_ID = " . $_GET['ID']);
+            $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT tipo, modello, colore, taglia, genere, imagepath FROM app_custom_Warehouse_items WHERE app_warehouse_items_id = " . $_GET['ID']);
         }
 
         // $footer_objs = [
