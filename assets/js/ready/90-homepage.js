@@ -28,7 +28,7 @@ function setHomepageReportProps() {
 
         if (parseInt(quantita) > 0) {
 
-            getQueryValueAsync("SELECT TYPE FROM APP_WAREHOUSE_CAUSALS WHERE ID = " + causale.val(), function (res) {
+            getQueryValueAsync("SELECT type FROM app_warehouse_causals WHERE id = " + causale.val(), function (res) {
                 // Invio il movimento AJAX
                 var type = res[0]["TYPE"];
                 var signMult = -1;
@@ -85,10 +85,10 @@ function setHomepageReportProps() {
                                 var returnQuery = `SELECT 
                         CONCAT('€ ', format(COALESCE(SUM(quantity), 0) * unitprice, 2)) AS "Val Giac",
                         COALESCE(SUM(quantity), 0) AS "Tot Giac"
-                        FROM APP_WAREHOUSE_MOVEMENTS A
-                        JOIN APP_WAREHOUSE_ITEMS B ON A.APP_WAREHOUSE_ITEMS_ID = B.ID
-                        where APP_WAREHOUSE_ITEMS_ID = (SELECT APP_WAREHOUSE_ITEMS_ID FROM APP_WAREHOUSE_MOVEMENTS WHERE id = ${response}) 
-                        GROUP BY APP_WAREHOUSE_ITEMS_ID`;
+                        FROM app_warehouse_movements A
+                        JOIN app_warehouse_items B ON A.app_warehouse_items_id = B.id
+                        where app_warehouse_items_id = (SELECT app_warehouse_items_id FROM app_warehouse_movements WHERE id = ${response}) 
+                        GROUP BY app_warehouse_items_id`;
 
                                 // aggiorno la giacenza totale e il valore di giacenza
                                 getQueryValueAsync(returnQuery, function (res) {
