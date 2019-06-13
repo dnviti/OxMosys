@@ -1,4 +1,5 @@
 SELECT 
+t.item_id AS "ID",
 IFNULL(DATE_FORMAT(t.lastupdate, '%d/%m/%Y %k:%i'), 'Nessun Movimento') AS "Data Mov.",
 t.taglia AS "Taglia",
 t.buname AS "Fornitore",
@@ -27,8 +28,8 @@ FROM (
 	JOIN app_custom_warehouse_items b ON a.id = b.app_warehouse_items_id
 	JOIN app_suppliers c ON a.app_suppliers_id = c.id
 	LEFT JOIN app_warehouse_movements z ON a.id = z.app_warehouse_items_id
-	WHERE z.lastupdate BETWEEN
-	IFNULL(STR_TO_DATE(DATE_FORMAT(?, '%Y-%m-%d'), '%Y-%m-%d'), STR_TO_DATE(DATE_FORMAT('1899-01-01', '%Y-%m-%d'), '%Y-%m-%d')) AND
+	WHERE DATE(z.lastupdate) BETWEEN
+	IFNULL(STR_TO_DATE(DATE_FORMAT('', '%Y-%m-%d'), '%Y-%m-%d'), STR_TO_DATE(DATE_FORMAT('1899-01-01', '%Y-%m-%d'), '%Y-%m-%d')) AND
 	IFNULL(STR_TO_DATE(DATE_FORMAT(?, '%Y-%m-%d'), '%Y-%m-%d'), DATE_SUB(DATE(SYSDATE()),INTERVAL -1 DAY))
 	OR z.lastupdate IS null
 ) AS t

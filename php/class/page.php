@@ -294,7 +294,7 @@ class Page
                     "f-warehouse-item"
                 ),
                 // Visualizzo il bottone elimina solo se admin
-                ($this->user["IS_ADMIN"] == 1 && $qtaGiac[0][0] == 0 ?
+                ($qtaGiac[0][0] == 0 ?
                     $_components->button(
                         'Rendi Obsoleto',
                         'danger',
