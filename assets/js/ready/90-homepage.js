@@ -27,10 +27,10 @@ function setHomepageReportProps() {
         var ajaxDataObj = {};
 
         if (parseInt(quantita) > 0) {
-
-            getQueryValueAsync("SELECT type FROM app_warehouse_causals WHERE id = " + causale.val(), function (res) {
+            var signQuery = "SELECT type FROM app_warehouse_causals WHERE id = " + causale.val();
+            getQueryValueAsync(signQuery, function (res) {
                 // Invio il movimento AJAX
-                var type = res[0]["TYPE"];
+                var type = res[0]["type"];
                 var signMult = -1;
 
                 if (type == '+') {

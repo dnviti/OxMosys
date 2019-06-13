@@ -30,8 +30,16 @@ if ($(".tbContainer table").length > 0) {
 
         });
         // --------------------- 
+        /*
+                $('.tbContainer table').on('page.dt', function () {
+                    setHomepageReportProps();
+                });
 
-        $('.tbContainer table').on('page.dt', function () {
+                $('.tbContainer table').on('search.dt', function () {
+                    setHomepageReportProps();
+                });
+        */
+        $('.tbContainer table').on('draw.dt', function () {
             setHomepageReportProps();
         });
     } catch (error) {
