@@ -74,6 +74,38 @@ $("button.ajax-action").click(function (event) {
                     );
                 }
             });
+        } else if ($(this).attr("ajax-action-type") == 'R') {
+            bootbox.confirm("Riabilitare?", function (result) {
+                if (result) {
+                    var objReq = {};
+                    objReq[$("input[id*='-ID']").attr("NAME")] = $("input[id*='-ID']").val();
+                    objReq[$("input[id*='-ID']").attr("NAME") + "2"] = $("input[id*='-ID']").val();
+                    sendAjaxData(
+                        thisButton.attr("ajax-action"),
+                        thisButton.attr("ajax-action-type"),
+                        false,
+                        objReq,
+                        thisButton.attr("ajax-topage"),
+                        modalResultMessageOK = false,
+                        modalResultMessageERROR = "Errore: Operazione Fallita",
+                        loadingMessage = "Caricamento in corso...",
+                        loadingColor = "#ccb300",
+                        loadingText = "black",
+                        function () {
+                            if (window.opener != null) {
+                                var callback = function () {
+                                    window.opener.location.reload(false);
+                                    //window.close();
+                                }
+                                bootbox.alert("Operazione Completata<br>La pagina precedente verrà aggiornata in automatico", callback)
+                            } else {
+                                bootbox.alert("Operazione Completata");
+                            }
+                        },
+                        thisButton.attr("ajax-uppercase")
+                    );
+                }
+            });
         } else {
             // se Salvo o Inserisco
             sendAjaxData(

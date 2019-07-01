@@ -1,4 +1,6 @@
-<?php namespace Oxmosys;
+<?php
+
+namespace Oxmosys;
 
 include "php/config/appconfig.php";
 include "php/third-part/queryBuilder/database.php";
