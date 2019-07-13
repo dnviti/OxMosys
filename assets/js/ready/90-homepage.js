@@ -18,7 +18,7 @@ function setHomepageReportProps() {
         // Catturo i dati del movimento dai campi sopra la tabella
         var causale = $("#LOV-APP_WAREHOUSE_CAUSALS-ID").children(":selected");
         var quantita = $("#NUMBER-APP_WAREHOUSE_MOVEMENTS-QUANTITY").val();
-        var data = $("#DATETIME_LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val();
+        var data = $("#DATE-APP_WAREHOUSE_MOVEMENTS-DATEREG").val();
 
         // Catturo i dati dal bottone (dati di riga)
         /** */
@@ -50,7 +50,7 @@ function setHomepageReportProps() {
                 if (data) {
                     var dateObj = new Date(data);
                     dateObj.setTime(dateObj.getTime() - dateObj.getTimezoneOffset() * 60 * 1000);
-                    ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-LASTUPDATE"] = dateObj.toISOString().slice(0, 19).replace('T', ' ');
+                    ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-DATEREG"] = dateObj.toISOString().slice(0, 19).replace('T', ' ');
                 }
 
                 var idArticolo = ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-APP_WAREHOUSE_ITEMS_ID"];
