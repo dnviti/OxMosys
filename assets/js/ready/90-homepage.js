@@ -18,7 +18,7 @@ function setHomepageReportProps() {
         // Catturo i dati del movimento dai campi sopra la tabella
         var causale = $("#LOV-APP_WAREHOUSE_CAUSALS-ID").children(":selected");
         var quantita = $("#NUMBER-APP_WAREHOUSE_MOVEMENTS-QUANTITY").val();
-        var data = $("#DATE-APP_WAREHOUSE_MOVEMENTS-DATEREG").val();
+        var data = $("#DATE-APP_WAREHOUSE_MOVEMENTS-LASTUPDATE").val();
 
         // Catturo i dati dal bottone (dati di riga)
         /** */
