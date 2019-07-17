@@ -1,0 +1,49 @@
+SELECT 
+t.image AS "<i class='fas fa-image fa-2x'></i>",
+t.taglia AS "Taglia",
+t.buname AS "Fornitore",
+t.genere AS "Genere",
+t.tipo AS "Tipo",
+t.modello AS "Modello",
+t.colore AS "Colore",
+t.code AS "Codice",
+CONCAT('€ ', t.unitprice) AS "Prz Uni",
+CONCAT('€ ', COALESCE(SUM(t.quantity), 0) * t.unitprice) AS "Val Giac",
+COALESCE(SUM(t.quantity), 0) AS "Tot Giac"
+FROM (
+	SELECT
+	CONCAT(
+	    '<span><button class="btn btn-link btn-table btn-taglia" data-toggle="popover" data-placement="right" data-itemid="',
+		a.id,
+		'" ><i class="fas fa-image fa-2x"></i>',
+	    '</button></span>'
+	) as image,
+	CONCAT(
+	'<button type="button" class="btn btn-danger btn-movimento-readonly" style="width:53px">',
+	b.taglia,
+	'</button>'
+	) as taglia,
+	c.buname,
+	b.genere,
+	b.tipo,
+	b.modello,
+	b.colore,
+	a.CODE,
+	a.unitprice,
+	z.quantity
+	FROM app_warehouse_items a
+	JOIN app_custom_warehouse_items b ON a.id = b.app_warehouse_items_id
+	JOIN app_suppliers c ON a.app_suppliers_id = c.id
+	LEFT JOIN app_warehouse_movements z ON a.id = z.app_warehouse_items_id
+	WHERE a.obsolete = 0
+) AS t
+GROUP BY 
+`<i class='fas fa-image fa-2x'></i>`,
+`Taglia`,
+`Fornitore`,
+`Genere`,
+`Tipo`,
+`Modello`,
+`Colore`,
+`Codice`,
+`Prz Uni`

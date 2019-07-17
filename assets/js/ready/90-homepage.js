@@ -1,7 +1,7 @@
 // Setta la data ad ora
 // var date = new Date();
 // date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-// $("#DATETIME-LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val(date.toISOString().substr(0, 16));
+// $("#DATETIME-LOCAL-APP_WAREHOUSE_MOVEMENTS-LASTUPDATE").val(date.toISOString().substr(0, 16));
 
 function setHomepageReportProps() {
     $(".btn-movimento").off("click");
@@ -50,7 +50,7 @@ function setHomepageReportProps() {
                 if (data) {
                     var dateObj = new Date(data);
                     dateObj.setTime(dateObj.getTime() - dateObj.getTimezoneOffset() * 60 * 1000);
-                    ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-DATEREG"] = dateObj.toISOString().slice(0, 19).replace('T', ' ');
+                    ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-LASTUPDATE"] = dateObj.toISOString().slice(0, 19).replace('T', ' ');
                 }
 
                 var idArticolo = ajaxDataObj["APP_WAREHOUSE_MOVEMENTS-APP_WAREHOUSE_ITEMS_ID"];
