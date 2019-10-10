@@ -88,6 +88,12 @@ class Page
             case 10:
                 $this->compiledPage = $this->warehouse_items_list_obsolete($pnum);
                 break;
+<<<<<<< HEAD
+=======
+            case 11:
+                $this->compiledPage = $this->log_operazioni($pnum);
+                break;
+>>>>>>> e982e90680415269488738966fed31fdb3b9ec37
             default:
                 $this->compiledPage = $this->nopage();
                 break;
@@ -532,7 +538,6 @@ class Page
             . $_components->javaScript($jsObsoleto)
             . $_components->javaScript("HoldOn.close()")
             . $_templates->footer();
-
         return $page;
     }
 
@@ -552,18 +557,23 @@ class Page
             . $_components->vGridRow([
                 '<h5 style="text-align:center">Articoli Movimentabili</h5>',
                 $_components->hGridRow([
+                    // Utente almeno gestore vede i campi di configurazione del movimento
+                        (int)Cookie::get("USER")["USER_ROLE_ID"] < 30 ?
                     $_components->hGridRow([
                         $_components->selectFromQuery('lov/lov_causali', 'app_warehouse_causals', 'id', 'classic', 'Causali', "", "NO", 2, "Causali", null),
 
                         $_components->hGridRow([
-                            $_components->itemFromColumn('app_warehouse_movements', 'datereg', 'date', "Data Mov", "Data Mov", ""),
+                            $_components->itemFromColumn('app_warehouse_movements', 'lastupdate', 'date', "Data Mov", "Data Mov", ""),
                             $_components->itemFromColumn('app_warehouse_movements', 'quantity', 'number', "Quantit&agrave;", "Quantit&agrave;", 1, 'min="1"')
                         ])
-                    ], "", "margin-top:10px;min-width:350px")
+                    ], "", "margin-top:10px;min-width:350px") : null
                 ])
             ])
 
-            . $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', ' ')
+            . ((int)Cookie::get("USER")["USER_ROLE_ID"] < 30 ? 
+                $_components->tableFromQuery('report/report_homepage', 'table_homepage', 'tbContainer', ' ') :
+                $_components->tableFromQuery('report/report_homepage_readonly', 'table_homepage', 'tbContainer', ' ')
+            )
             . $_templates->footer();
 
         return $page;
@@ -587,6 +597,24 @@ class Page
             ], 'btnNav')
 
             . $_components->tableFromQuery('report/report_utenti', 'table_utenti', 'tbContainer', 'Lista Utenti', array(0, Cookie::get("USER")["USER_ROLE_ID"]))
+            . $_templates->footer();
+
+        return $page;
+    }
+
+    public function log_operazioni($pnum)
+    {
+        $_SESSION["PAGE"]["ID"] = $pnum;
+        $_components = $this->_components;
+        $_templates = $this->_templates;
+
+        $page = ''
+            . $_templates->header("Log Operazioni")
+            . $_templates->slideMenu()
+            . $_templates->body()
+            // Aggiunta Utente Disabilitata
+
+            . $_components->tableFromQuery('report/report_log_operazioni', 'table_log_operazioni', 'tbContainer1', 'Log Operazioni', array(0, Cookie::get("USER")["USER_ROLE_ID"]))
             . $_templates->footer();
 
         return $page;
@@ -1323,6 +1351,8 @@ class Template extends Asset
         if (isset($this->user["IS_ADMIN"])) {
             $header .= '<input type="hidden" id="p_is_admin" value="' . $this->user["IS_ADMIN"] . '" />';
         }
+
+        isset(Cookie::get("USER")["USER_ROLE_ID"]) ? $header .= '<input type="hidden" id="p_user_role_id" value="' . Cookie::get("USER")["USER_ROLE_ID"] . '" />' : null;
 
         return $header;
     }

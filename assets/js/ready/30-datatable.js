@@ -3,7 +3,7 @@ if ($(".tbContainer table").length > 0) {
         // Datatable Initialization 
         var datatable = $(".tbContainer table").DataTable({
             "paging": true,
-            "pagingType": "full_numbers",
+            "pagingType": "full",
             "pageLength": 50,
             "lengthChange": true,
             "language": {
@@ -19,12 +19,25 @@ if ($(".tbContainer table").length > 0) {
             },
             responsive: true,
 
-            dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            dom: "<'row'<'col-sm-12'l>>" +
+                "<'row'<'col-sm-12'f>>" +
+                "<'row'<'col-sm-12'p>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 
             "initComplete": function (settings, json) {
                 setHomepageReportProps();
+
+                // Recover last search from local storage by page
+                $("#table_homepage_filter input:first-child").val(localStorage.getItem("table-search-page-" + $("#p_page_id").val()));
+                $("#table_homepage_filter input:first-child").focus();
+                $("#table_homepage_filter input:first-child").trigger("keyup");
+
+                // Save last search on the table by page
+                $("#table_homepage_filter").on("change, keyup", function () {
+                    localStorage.setItem("table-search-page-" + $("#p_page_id").val(), $("#table_homepage_filter input:first-child").val());
+                });
+
                 HoldOn.close();
             }
 

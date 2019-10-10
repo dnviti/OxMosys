@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "sqltools.connections": [
         {
             "database": "my_bottega611",
@@ -10,4 +11,12 @@
             "username": "dbuser"
         }
     ]
+=======
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    }
+>>>>>>> e982e90680415269488738966fed31fdb3b9ec37
 }

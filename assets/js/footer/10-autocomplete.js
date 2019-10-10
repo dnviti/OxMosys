@@ -17,9 +17,9 @@ $("input[type=autocomplete]").blur(function () {
 
 function autocomplete(inp) {
 
-    var column = $(inp).attr("name").toUpperCase().replace("-", ".");
-    var table = $(inp).attr("table").toUpperCase();
-    var value = $(inp).val().toUpperCase();
+    var column = $(inp).attr("name").toLowerCase() /*.toUpperCase()*/ .replace("-", ".");
+    var table = $(inp).attr("table").toLowerCase(); //.toUpperCase();
+    var value = $(inp).val().toLowerCase(); //.toUpperCase();
     var width = $(inp).width() + 26;
 
     var sql = `

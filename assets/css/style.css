@@ -485,6 +485,13 @@ table .btn-movimento {
   max-width: 53px;
 }
 
+table .btn-movimento-readonly {
+  font-size: 10pt;
+  padding: 8px 0;
+  max-height: 43px;
+  max-width: 53px;
+}
+
 .col-md-6 {
   flex: 0 0 25% !important;
 }
@@ -531,4 +538,20 @@ table .btn-movimento {
 
 .bootstrap-select>select {
   position: relative !important;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+  width: 100%;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+  width: 100%;
+}
+
+div#table_homepage_filter {
+  padding-right: 10%;
 }
