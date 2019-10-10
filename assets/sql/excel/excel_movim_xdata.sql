@@ -11,7 +11,7 @@ b.colore AS "Colore",
 a.CODE AS "Codice",
 a.unitprice AS "Prz Uni",
 COALESCE(z.quantity, 0) AS "Qta Mov.",
-ABS(COALESCE(z.quantity, 0) * a.unitprice) * IF(d.`type` = '-', 1, IF(d.id = 7, 1, -1)) AS "Val Mov."
+COALESCE(z.quantity, 0) * a.unitprice AS "Val Mov."
 
 FROM app_warehouse_movements z
 JOIN app_warehouse_causals d ON z.app_warehouse_causals_id = d.id

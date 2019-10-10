@@ -1,7 +1,7 @@
 // Setta la data ad ora
 // var date = new Date();
 // date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-// $("#DATETIME-LOCAL-APP_WAREHOUSE_MOVEMENTS-LASTUPDATE").val(date.toISOString().substr(0, 16));
+// $("#DATETIME-LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val(date.toISOString().substr(0, 16));
 
 function setHomepageReportProps() {
     $(".btn-movimento").off("click");
@@ -18,7 +18,7 @@ function setHomepageReportProps() {
         // Catturo i dati del movimento dai campi sopra la tabella
         var causale = $("#LOV-APP_WAREHOUSE_CAUSALS-ID").children(":selected");
         var quantita = $("#NUMBER-APP_WAREHOUSE_MOVEMENTS-QUANTITY").val();
-        var data = $("#DATE-APP_WAREHOUSE_MOVEMENTS-LASTUPDATE").val();
+        var data = $("#DATETIME_LOCAL-APP_WAREHOUSE_MOVEMENTS-DATEREG").val();
 
         // Catturo i dati dal bottone (dati di riga)
         /** */
