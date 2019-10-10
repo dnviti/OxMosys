@@ -1,0 +1,30 @@
+// Push settings file - first generated on Mon Jun 10 2019 19:12:38 GMT+0200 (ora legale Europa occidentale).
+// Note: Optional items are commented out and can be uncommented if you wish to set them.
+// Preset environments are: prod, dev, stage. Custom environments (and their colours) can be created in settings.
+{
+	"env": "default",
+	"default": {
+		"service": "SFTP",
+		"options": {
+			// "timeZoneOffset": 0,
+			// "testCollisionTimeDiffs": true,
+			// "collisionUploadAction": null,
+			// "collisionDownloadAction": null,
+			// "followSymlinks": false,
+			// "reminder": true,
+			// "reminderTimeout": null,
+			"host": "ftp.bottega611.altervista.org",
+			"port": 21,
+			"username": "bottega611",
+			"password": "xdYZe8NvnVYw",
+			"ignoreGlobs": 
+			// "privateKey": "",
+			// "keyPassphrase": "",
+			"root": "/",
+			// "keepaliveInterval": 3000,
+			// "debug": false,
+			// "fileMode": "",
+			// "sshGateway": null
+		}
+	}
+}

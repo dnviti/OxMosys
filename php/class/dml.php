@@ -1,4 +1,6 @@
-<?php namespace Oxmosys;
+<?php
+
+namespace Oxmosys;
 
 use Oxmosys\AppConfig;
 use Oxmosys\QueryBuilder;
@@ -194,7 +196,7 @@ class DML
                 $res = $this->queryBuilder
                     ->table($this->tbname)
                     ->where($key, '=', $id)
-                    ->update(array("OBSOLETE" => 1))
+                    ->update(array("obsolete" => 1))
                     ->run();
 
                 //$res = $this->update($this->tbname, $id, array("OBSOLETE" => 1));
@@ -211,11 +213,34 @@ class DML
                     ->run();
 
                 if (!($res > 0 ? true : false)) {
-                    throw new Exception("DML (DELETE)<br>TABLE (" . $this->tbname . ")<br>ID (" . $id . ")<br>ACTION (OBSOLETE)");
+                    throw new Exception("Row Not Found<br>DML (DELETE)<br>TABLE (" . $this->tbname . ")<br>ID (" . $id . ")<br>ACTION (OBSOLETE)");
                 }
             }
         } catch (\Throwable $th) {
             $this::logdml("DELETE", $this->tbname, $key . '=' . $id, null, $th->getMessage());
+            throw $th;
+            die();
+        }
+
+        return $res;
+    }
+
+    public function restore($key, $id)
+    {
+        try {
+            $res = $this->queryBuilder
+                ->table($this->tbname)
+                ->where($key, '=', $id)
+                ->update(array("obsolete" => 0))
+                ->run();
+
+            //$res = $this->update($this->tbname, $id, array("OBSOLETE" => 1));
+
+            if (!($res > 0 ? true : false)) {
+                throw new Exception("Row Not Found<br>DML (UPDATE)<br>TABLE (" . $this->tbname . ")<br>" . $key . " (" . $id . ")<br>ACTION (RESTORE)");
+            }
+        } catch (\Throwable $th) {
+            $this::logdml("RESTORE", $this->tbname, $key . '=' . $id, null, $th->getMessage());
             throw $th;
             die();
         }

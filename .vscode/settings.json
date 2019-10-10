@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "my_bottega611",
+            "dialect": "MariaDB",
+            "name": "OxMosys",
+            "password": "dbuser",
+            "port": 3306,
+            "server": "192.168.56.106",
+            "username": "dbuser"
+        }
+    ]
+}

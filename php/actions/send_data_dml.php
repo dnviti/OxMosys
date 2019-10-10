@@ -1,4 +1,6 @@
-<?php namespace Oxmosys;
+<?php
+
+namespace Oxmosys;
 // Cambia la directory con la root del progetto
 chdir('../../');
 
@@ -8,6 +10,7 @@ use Oxmosys\DML;
 use Exception;
 
 $v_uppercase = true;
+$logtype = "";
 
 try {
 
@@ -17,6 +20,8 @@ try {
 
     switch ($_POST["OPERATION"]) {
         case "I":
+
+            $logtype = "INSERT";
 
             $DML = new DML($_POST);
 
@@ -70,6 +75,8 @@ try {
             break;
         case "U":
 
+            $logtype = "UPDATE";
+
             $DML = new DML($_POST);
 
             $params = array();
@@ -119,6 +126,8 @@ try {
 
             break;
         case "D":
+            $logtype = "DELETE";
+
             $DML = new DML($_POST);
 
             $params = array();
@@ -152,8 +161,44 @@ try {
             }
 
             break;
+        case "R":
+
+            $logtype = "RESTORE";
+            $DML = new DML($_POST);
+
+            $params = array();
+
+            foreach ($DML->parentTable as $key => $value) {
+                $params[strtolower($value["COLUMN"])] = $value["VALUE"];
+            }
+            $DML->tbname = strtolower($value["TABLE"]);
+
+            $last_value = end($params);
+            $last_key = key($params);
+
+            $lastId = $DML->restore("id", $last_value);
+
+            // cancello i vecchi parametri per far posto ai nuovi
+            unset($params);
+
+            $params = array();
+
+            // Mi segno la tabella padre
+            $DML->parentTable = $DML->tbname;
+
+            // Tramite l'id della transazione in corso inserisco gli altri record
+            foreach ($DML->childrenTables as $key => $value) {
+                foreach ($DML->childrenTables[$key] as $key2 => $value2) {
+                    $params[strtolower($value2["COLUMN"])] = $value2["VALUE"];
+                }
+                $DML->tbname = strtolower($value2["TABLE"]);
+                $params[strtolower($DML->parentTable . "_ID")] = $lastId;
+                $DML->restore(strtolower($DML->parentTable . "_ID"), $params);
+            }
+
+            break;
         default:
-            throw new Exception("Operation not valid (I->Insert, U->Update, D->Delete)", 1);
+            throw new Exception("Operation not valid (I->Insert, U->Update, D->Delete, R->Restore)", 1);
             break;
     }
 } catch (\Throwable $th) {
@@ -162,6 +207,6 @@ try {
     $header .= "<br>On " . $th->getFile();
     $header .= "<br>At Line " . $th->getLine();
     $header .= "<br>" . $th->getMessage();
-    $DML->logdml("INSERT", $DML->tbname, $params, null, $header);
+    $DML->logdml($logtype, $DML->tbname, $params, null, $header);
     die(header($header));
 }

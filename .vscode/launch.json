@@ -11,7 +11,7 @@
             "log": true,
             "stopOnEntry": false,
             "pathMappings": {
-                "/var/www/html": "C:\\Users\\dnvit\\Documents\\GitHub\\OxMosys\\"
+                "/var/www/html": "E:\\Lavoro\\GitHub\\OxMosys"
             }
         },
         {

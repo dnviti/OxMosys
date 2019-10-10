@@ -1,10 +1,13 @@
-<?php namespace Oxmosys;
+<?php
+
+namespace Oxmosys;
 
 use Exception;
 use Oxmosys\QueryBuilder;
 use PDO;
 use Oxmosys\AppConfig;
 use Oxmosys\Cookie;
+use Oxmosys\NoPage;
 
 class Page
 {
@@ -82,7 +85,29 @@ class Page
             case 9:
                 $this->compiledPage = $this->warehouse_reports($pnum);
                 break;
+            case 10:
+                $this->compiledPage = $this->warehouse_items_list_obsolete($pnum);
+                break;
+            default:
+                $this->compiledPage = $this->nopage();
+                break;
         }
+    }
+
+    public function nopage()
+    {
+        $_components = $this->_components;
+        $_templates = $this->_templates;
+
+        $page = ''
+            . $_templates->header("404")
+            . $_templates->slideMenu()
+            . $_templates->body()
+            . "<h1 style='text-align:center'>Pagina non Trovata</h1>"
+            . $_components->button("Torna alla Home", "primary", 1)
+            . $_templates->footer();
+
+        return $page;
     }
 
     public function dbconfig()
@@ -247,6 +272,27 @@ class Page
         return $page;
     }
 
+    public function warehouse_items_list_obsolete($pnum)
+    {
+        $_SESSION["PAGE"]["ID"] = $pnum;
+        $_components = $this->_components;
+        $_templates = $this->_templates;
+
+        $gridRow_btn = [
+            $_components->button("Nuovo Articolo", "primary", "2")
+        ];
+
+        $page = ''
+            . $_templates->header("Lista Articoli")
+            . $_templates->slideMenu()
+            . $_templates->body()
+            . $_components->hGridRow($gridRow_btn, 'btnNav')
+            . $_components->tableFromQuery('report/report_articoli_obsoleti', 'table_articoli_obsoleti', 'tbContainer', 'Lista Articoli Obsoleti')
+            . $_templates->footer();
+
+        return $page;
+    }
+
     public function warehouse_item($pnum)
     {
         $_SESSION["PAGE"]["ID"] = $pnum;
@@ -298,7 +344,7 @@ class Page
                     $_components->button(
                         'Rendi Obsoleto',
                         'danger',
-                        8,
+                        false,
                         'ajax-action',
                         'btn-delete',
                         "php/actions/send_data_dml.php",
@@ -308,6 +354,19 @@ class Page
             ];            // prendo i valori dalla query delle tabelle custom
             $app_custom_warehouse_items = $_components->valueFromQueryPhp("SELECT tipo, modello, colore, taglia, genere, imagepath FROM app_custom_warehouse_items WHERE app_warehouse_items_id = " . $_GET['ID']);
         }
+
+        $obsoleteBtn = [
+            $_components->button(
+                'Riabilita Articolo',
+                'success',
+                false,
+                'ajax-action',
+                'btn-update',
+                "php/actions/send_data_dml.php",
+                "R",
+                "f-warehouse-item"
+            )
+        ];
 
         // $footer_objs = [
         //     // generazione Menu (codice in variabile pubblica di classe)
@@ -338,7 +397,8 @@ class Page
                     $_components->itemFromColumn('app_warehouse_items', 'notes', 'textarea', "Note", "Note")
                 ]),
                 ($isObsoleto == 1 ? 'Articolo Obsoleto<br><br>' : '')
-            ], 'f_warehouse_items'), ($isObsoleto == 0 ? $_components->hGridRow($gridForm_btn) : ''),
+            ], 'f_warehouse_items'),
+            $_components->hGridRow(($isObsoleto == 0 ? $gridForm_btn : $obsoleteBtn)),
 
             // Caricamento immagine articolo
             $_components->hGridRow(['<br>']),
@@ -358,11 +418,11 @@ class Page
             $_components->itemFromColumn('app_warehouse_items', 'userupdate', 'hidden', null, null, $this->user["USER_ID"])
         ];
 
-        $jsObsoleto = "
-            $(document).ready(function(){
-                $isObsoleto == 1 ? bootbox.alert('Attenzione! Articolo Obsoleto attivo solo in consultazione') : null;
-            });
-        ";
+        // $jsObsoleto = "
+        //     $(document).ready(function(){
+        //         $isObsoleto == 1 ? bootbox.alert('Attenzione! Articolo Obsoleto attivo solo in consultazione') : null;
+        //     });
+        // ";
 
         $page = ''
             . $_templates->header("Art. #" . $itemsVals["code"] . "-" . $itemsVals["taglia"])
@@ -370,7 +430,7 @@ class Page
             . $_templates->body()
             . $_components->form($form_items, 'f-warehouse-item')
             . $_components->hGridRow(['<span id="dettWareItem"></span>'])
-            . $_components->javaScript($jsObsoleto)
+            //. $_components->javaScript($jsObsoleto)
             //. $_components->javaScriptLink('slidemenu')
             . $_components->javaScript("HoldOn.close()")
             . $_templates->footer();
@@ -673,7 +733,7 @@ class Component
         }
     }
 
-    public function selectFromQuery($queryName, $tableName, $colName, $type, $nullDisplay = null, $nullValue = "", $nullable = "NO", $itemDefault = null, $label = null, $search = false, $attrib = null, $class = '', $title = '')
+    public function selectFromQuery($queryName, $tableName, $colName, $type = 'classic', $nullDisplay = null, $nullValue = "", $nullable = "NO", $itemDefault = null, $label = null, $search = false, $attrib = null, $class = '', $title = '')
     {
         isset($_GET['ID']) ? $rowid = $_GET['ID'] : $rowid = null;
 
@@ -681,7 +741,7 @@ class Component
 
 
         if ($rowid != null) {
-            $query = "SELECT $colName FROM $tableName WHERE ID = $rowid";
+            $query = "SELECT $colName FROM $tableName WHERE id = $rowid";
         }
 
         // Fetch column data by id
@@ -749,6 +809,8 @@ class Component
 
             if ($nullDisplay != null) {
                 $itemDefault != null ? $selected = "" : $selected = " selected";
+            } else {
+                $selected = "";
             }
 
             $select = $select . '<option value="' . $nullValue . '"' . $selected . ' disabled>' . $nullDisplay . '</option>';
@@ -785,7 +847,7 @@ class Component
 
 
         if ($rowid != null) {
-            $query = "SELECT $colName FROM $tableName WHERE ID = $rowid";
+            $query = "SELECT $colName FROM $tableName WHERE id = $rowid";
         }
 
         // Fetch column data by id
@@ -1305,7 +1367,7 @@ class Template extends Asset
             ->table("app_slidemenu_sections")
             ->join("app_slidemenu_sections_role", "app_slidemenu_sections.id", "=", "app_slidemenu_sections_role.app_slidemenu_sections_id")
             ->select(array("app_slidemenu_sections.text", "app_slidemenu_sections.id"))
-            ->where("app_slidemenu_sections_role.app_user_roles_id", ">=", (int)Cookie::get("USER")["USER_ROLE_ID"])
+            ->where("app_slidemenu_sections_role.app_user_roles_id", ">=", (int) Cookie::get("USER")["USER_ROLE_ID"])
             ->where("app_slidemenu_sections.obsolete", "=", 0)
             ->order("app_slidemenu_sections.id")
             ->run();
@@ -1331,9 +1393,9 @@ class Template extends Asset
                     ->table("app_slidemenu_items")
                     ->left_join("app_slidemenu_items_role", "app_slidemenu_items_role.app_slidemenu_items_id", "=", "app_slidemenu_items.id")
                     ->select(array("app_slidemenu_items.pagenum", "app_slidemenu_items.linktext"))
-                    ->where("app_slidemenu_items_role.app_user_roles_id", ">=", (int)Cookie::get("USER")["USER_ROLE_ID"])
+                    ->where("app_slidemenu_items_role.app_user_roles_id", ">=", (int) Cookie::get("USER")["USER_ROLE_ID"])
                     ->or_where("app_slidemenu_items_role.app_slidemenu_items_id", "is", null)
-                    ->where("app_slidemenu_items.app_slidemenu_sections_id", "=", (int)$value[1])
+                    ->where("app_slidemenu_items.app_slidemenu_sections_id", "=", (int) $value[1])
                     ->where("app_slidemenu_items.obsolete", "=", 0)
                     ->order("app_slidemenu_items.app_slidemenu_sections_id")
                     ->order("app_slidemenu_items.id")
